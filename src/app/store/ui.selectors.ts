@@ -1,0 +1,10 @@
+import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { UiState } from './ui.reducer';
+
+export const selectUiState = createFeatureSelector<UiState>('ui');
+
+export const selectUiLoading = createSelector(
+  selectUiState,
+  (state) => state.pendingRequests > 0
+);
+

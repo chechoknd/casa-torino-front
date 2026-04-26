@@ -1,0 +1,751 @@
+@use '@angular/material' as mat;
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap');
+
+html {
+  color-scheme: light;
+  @include mat.theme((
+    color: (
+      primary: mat.$green-palette,
+      tertiary: mat.$green-palette
+    ),
+    typography: 'DM Sans',
+    density: 0
+  ));
+}
+
+:root {
+  --color-bg: #F5F0E8;
+  --color-bg-alt: #EDE8DA;
+  --color-surface: #FAF8F3;
+  --color-primary: #2D5016;
+  --color-primary-hover: #3D6B20;
+  --color-primary-light: #4A8029;
+  --color-primary-muted: #D4E6C3;
+  --color-text-primary: #1E3A0F;
+  --color-text-body: #3B4A2F;
+  --color-text-muted: #7A8C6E;
+  --color-text-inverse: #F5F0E8;
+  --color-border: #C8BFA8;
+  --color-border-focus: #2D5016;
+  --color-success: #3D6B20;
+  --color-warning: #A07830;
+  --color-error: #8B2E2E;
+  --color-info: #2D5016;
+  --shadow-sm: 0 1px 3px rgba(30, 58, 15, 0.08);
+  --shadow-md: 0 4px 12px rgba(30, 58, 15, 0.10);
+  --shadow-lg: 0 8px 24px rgba(30, 58, 15, 0.12);
+  --text-xs: 11px;
+  --text-sm: 13px;
+  --text-base: 15px;
+  --text-md: 17px;
+  --text-lg: 20px;
+  --text-xl: 24px;
+  --text-2xl: 32px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at top left, rgba(45, 80, 22, 0.05), transparent 32%),
+    linear-gradient(180deg, var(--color-surface) 0%, var(--color-bg) 100%);
+  color: var(--color-text-body);
+  font-family: 'DM Sans', 'Nunito', 'Outfit', sans-serif;
+  font-size: var(--text-base);
+  line-height: 1.5;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  color: var(--color-text-primary);
+  font-family: 'Playfair Display', 'Lora', Georgia, serif;
+  font-weight: 700;
+}
+
+h1 {
+  font-size: var(--text-xl);
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: var(--text-lg);
+  line-height: 1.25;
+}
+
+p,
+small,
+span,
+label,
+td,
+th,
+button,
+input,
+textarea,
+select {
+  font-family: 'DM Sans', 'Nunito', 'Outfit', sans-serif;
+}
+
+small,
+.muted {
+  color: var(--color-text-muted);
+}
+
+.page-shell {
+  display: grid;
+  gap: var(--space-8);
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+  flex-wrap: wrap;
+}
+
+.page-card {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 200ms ease, border-color 200ms ease, transform 200ms ease;
+}
+
+.page-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  padding: var(--space-2) var(--space-3);
+  border-radius: 999px;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.mat-mdc-snack-bar-container.snackbar-error {
+  --mdc-snackbar-container-color: var(--color-error);
+  --mdc-snackbar-supporting-text-color: var(--color-text-inverse);
+}
+
+.mat-mdc-snack-bar-container.snackbar-success {
+  --mdc-snackbar-container-color: var(--color-success);
+  --mdc-snackbar-supporting-text-color: var(--color-text-inverse);
+}
+
+.mat-mdc-card {
+  background-color: transparent;
+}
+
+.mat-mdc-dialog-surface {
+  background: var(--color-surface) !important;
+  border-radius: 16px !important;
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-lg);
+}
+
+.mat-mdc-button-base {
+  border-radius: 8px !important;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.mat-mdc-unelevated-button:not(:disabled) {
+  --mdc-filled-button-container-color: var(--color-primary);
+  --mdc-filled-button-label-text-color: var(--color-text-inverse);
+}
+
+.mat-mdc-unelevated-button:hover:not(:disabled) {
+  --mdc-filled-button-container-color: var(--color-primary-hover);
+}
+
+.mat-mdc-outlined-button:not(:disabled) {
+  --mdc-outlined-button-label-text-color: var(--color-primary);
+  --mdc-outlined-button-outline-color: var(--color-primary);
+}
+
+.mat-mdc-icon-button {
+  color: var(--color-primary);
+}
+
+.mat-mdc-icon-button.mat-warn {
+  color: var(--color-error);
+}
+
+.mat-mdc-form-field {
+  width: 100%;
+}
+
+.mat-mdc-text-field-wrapper {
+  background: var(--color-surface) !important;
+  border-radius: 8px !important;
+}
+
+.mdc-notched-outline__leading,
+.mdc-notched-outline__notch,
+.mdc-notched-outline__trailing {
+  border-color: var(--color-border) !important;
+}
+
+.mat-focused .mdc-notched-outline__leading,
+.mat-focused .mdc-notched-outline__notch,
+.mat-focused .mdc-notched-outline__trailing {
+  border-color: var(--color-border-focus) !important;
+}
+
+.mat-mdc-form-field-focus-overlay {
+  background: transparent;
+}
+
+.mat-mdc-form-field.mat-focused .mat-mdc-text-field-wrapper {
+  box-shadow: 0 0 0 3px rgba(45, 80, 22, 0.15);
+}
+
+.mat-mdc-form-field-subscript-wrapper,
+.mat-mdc-form-field-error,
+.mat-mdc-form-field-hint {
+  font-size: var(--text-sm);
+}
+
+.mat-mdc-floating-label,
+.mdc-floating-label {
+  color: var(--color-text-muted) !important;
+}
+
+.mat-mdc-input-element,
+.mat-mdc-select-value-text,
+.mat-mdc-select-min-line {
+  color: var(--color-text-body) !important;
+  font-size: var(--text-base);
+}
+
+.mat-mdc-select-arrow,
+.mat-datepicker-toggle-default-icon {
+  color: var(--color-primary);
+}
+
+.mat-mdc-option {
+  font-size: var(--text-base);
+}
+
+.mat-mdc-table {
+  background: transparent;
+}
+
+.mat-mdc-header-row {
+  background: var(--color-bg-alt);
+}
+
+.mat-mdc-header-cell {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  border-bottom-color: var(--color-border);
+}
+
+.mat-mdc-cell,
+.mat-mdc-header-cell {
+  padding: 14px 16px;
+}
+
+.mat-mdc-row,
+.mat-mdc-header-row {
+  border-bottom-color: var(--color-border);
+}
+
+.mat-mdc-row:hover {
+  background: rgba(45, 80, 22, 0.04);
+}
+
+.mat-mdc-paginator {
+  background: transparent;
+  border-top: 1px solid var(--color-border);
+}
+
+.mat-mdc-paginator,
+.mat-mdc-paginator .mat-mdc-select-value,
+.mat-mdc-paginator .mat-mdc-icon-button {
+  color: var(--color-text-body);
+}
+
+ct-shell .shell {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  min-height: 100vh;
+  gap: var(--space-8);
+  padding: var(--space-8);
+}
+
+ct-shell .sidebar {
+  background: var(--color-primary);
+  border-color: rgba(250, 248, 243, 0.16);
+  box-shadow: var(--shadow-md);
+  top: var(--space-8);
+}
+
+ct-shell .sidebar-toggle,
+ct-shell .topbar-toggle {
+  color: var(--color-text-inverse);
+  border-radius: 8px;
+}
+
+ct-shell .sidebar:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+ct-shell .brand {
+  gap: var(--space-1);
+  margin-bottom: var(--space-8);
+}
+
+ct-shell .brand-copy {
+  min-width: 0;
+}
+
+ct-shell .brand span {
+  color: var(--color-text-inverse);
+  font-family: 'Playfair Display', 'Lora', Georgia, serif;
+  font-size: var(--text-xl);
+  line-height: 1.2;
+}
+
+ct-shell .brand small {
+  color: rgba(245, 240, 232, 0.72);
+  font-size: var(--text-sm);
+}
+
+ct-shell nav {
+  display: grid;
+  gap: var(--space-1);
+}
+
+ct-shell .sidebar-footer {
+  border-top: 1px solid rgba(245, 240, 232, 0.18);
+}
+
+ct-shell .sidebar-footer strong,
+ct-shell .sidebar-footer small {
+  color: rgba(245, 240, 232, 0.82);
+}
+
+ct-shell .nav-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 48px;
+  padding: 12px 16px;
+  color: rgba(245, 240, 232, 0.75);
+  border-left: 3px solid transparent;
+  border-radius: 8px;
+  font-size: var(--text-base);
+  font-weight: 500;
+}
+
+ct-shell .nav-link mat-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  color: rgba(245, 240, 232, 0.78);
+  font-size: 20px;
+  line-height: 1;
+  flex: 0 0 20px;
+  overflow: visible;
+}
+
+ct-shell .nav-link span {
+  color: rgba(245, 240, 232, 0.82);
+  line-height: 1.2;
+}
+
+ct-shell .shell.collapsed .sidebar-inner {
+  padding-inline: var(--space-3);
+}
+
+ct-shell .shell.collapsed .brand {
+  justify-content: center;
+  margin-bottom: var(--space-6);
+}
+
+ct-shell .shell.collapsed nav {
+  justify-items: center;
+}
+
+ct-shell .shell.collapsed .nav-link {
+  width: 100%;
+  justify-content: center;
+  padding-inline: var(--space-2);
+}
+
+ct-shell .nav-link:hover,
+ct-shell .nav-link.active {
+  color: var(--color-text-inverse);
+  background: rgba(255, 255, 255, 0.15);
+  border-left-color: var(--color-text-inverse);
+}
+
+ct-shell .nav-link:hover mat-icon,
+ct-shell .nav-link.active mat-icon,
+ct-shell .nav-link:hover span,
+ct-shell .nav-link.active span {
+  color: var(--color-text-inverse);
+}
+
+ct-shell .content {
+  display: grid;
+  gap: var(--space-8);
+}
+
+ct-shell .topbar {
+  background: var(--color-surface);
+  padding: var(--space-6) var(--space-8);
+}
+
+ct-shell .topbar-copy,
+ct-shell .topbar-meta {
+  display: grid;
+  gap: var(--space-1);
+}
+
+ct-shell .topbar-leading {
+  min-width: 0;
+}
+
+.mat-icon {
+  font-family: 'Material Icons' !important;
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'liga';
+}
+
+ct-shell .topbar strong {
+  display: block;
+  color: var(--color-text-primary);
+  font-family: 'Playfair Display', 'Lora', Georgia, serif;
+  font-size: var(--text-lg);
+  font-weight: 700;
+}
+
+ct-shell .topbar p {
+  margin: var(--space-2) 0 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+ct-shell .topbar-meta span {
+  color: var(--color-text-primary);
+  font-size: var(--text-sm);
+}
+
+ct-shell .topbar-meta small {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+
+ct-shell .workspace {
+  width: min(100%, 1200px);
+}
+
+ct-shell .footer {
+  background: var(--color-surface);
+}
+
+ct-shell .footer strong {
+  color: var(--color-text-primary);
+  font-family: 'Playfair Display', 'Lora', Georgia, serif;
+  font-size: var(--text-md);
+}
+
+ct-shell .footer p,
+ct-shell .footer small {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+ct-entity-toolbar h1 {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-xl);
+}
+
+ct-entity-toolbar p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-md);
+}
+
+ct-dashboard .stats-grid {
+  gap: var(--space-6);
+}
+
+ct-dashboard .stat-card,
+ct-dashboard .latest-card {
+  padding: var(--space-6);
+}
+
+ct-dashboard .stat-card strong {
+  display: block;
+  color: var(--color-text-primary);
+  font-family: 'Playfair Display', 'Lora', Georgia, serif;
+  font-size: var(--text-2xl);
+  line-height: 1.1;
+}
+
+ct-dashboard .stat-card span {
+  display: block;
+  margin-top: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+ct-dashboard .latest-card h2 {
+  margin-bottom: var(--space-5);
+}
+
+ct-dashboard .latest-row {
+  align-items: center;
+  padding: var(--space-4) 0;
+}
+
+ct-dashboard .latest-row strong {
+  color: var(--color-text-primary);
+  font-size: var(--text-base);
+}
+
+ct-dashboard .latest-row small {
+  margin-top: var(--space-1);
+  font-size: var(--text-sm);
+}
+
+ct-customer-list .table-card,
+ct-product-list .table-card,
+ct-ingredient-list .table-card,
+ct-recipe-list .table-card,
+ct-order-list .table-card,
+ct-payment-list .table-card {
+  padding: var(--space-2);
+  overflow: hidden;
+}
+
+ct-customer-form .form-card,
+ct-product-form .form-card,
+ct-ingredient-form .form-card,
+ct-order-form .form-card,
+ct-recipe-form .form-card,
+ct-payment-form .form-card,
+ct-customer-detail .detail-card,
+ct-product-detail .detail-card,
+ct-ingredient-detail .detail-card,
+ct-recipe-detail .detail-card,
+ct-order-detail .detail-card,
+ct-payment-list .form-card,
+ct-payment-list .table-card {
+  padding: var(--space-6);
+}
+
+ct-customer-form form,
+ct-product-form form,
+ct-ingredient-form form,
+ct-order-form form,
+ct-recipe-form form,
+ct-payment-form form {
+  display: grid;
+  gap: var(--space-5);
+}
+
+ct-customer-form .actions,
+ct-product-form .actions,
+ct-ingredient-form .actions,
+ct-order-form .actions,
+ct-recipe-form .actions,
+ct-payment-form .actions,
+ct-customer-detail .actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-3);
+}
+
+ct-order-form .items-header,
+ct-recipe-form .items-header,
+ct-order-form .item-row,
+ct-recipe-form .item-row,
+ct-payment-list .selector {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+ct-order-form .items-header,
+ct-recipe-form .items-header {
+  justify-content: space-between;
+}
+
+ct-order-form .items,
+ct-recipe-form [formarrayname='items'] {
+  display: grid;
+  gap: var(--space-4);
+}
+
+ct-order-form .item-row,
+ct-recipe-form .item-row {
+  margin-bottom: 0;
+}
+
+ct-order-form .item-row mat-form-field,
+ct-recipe-form .item-row mat-form-field {
+  flex: 1 1 220px;
+}
+
+ct-customer-detail p,
+ct-product-detail p,
+ct-ingredient-detail p,
+ct-recipe-detail p,
+ct-order-detail p {
+  margin: 0;
+  color: var(--color-text-body);
+}
+
+ct-customer-detail .page-shell,
+ct-recipe-detail .page-shell,
+ct-order-detail .page-shell {
+  gap: var(--space-6);
+}
+
+ct-customer-detail .detail-card,
+ct-recipe-detail .detail-card,
+ct-order-detail .detail-card {
+  display: grid;
+  gap: var(--space-4);
+}
+
+ct-customer-detail .history,
+ct-recipe-detail .row,
+ct-order-detail .row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-4) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+ct-ingredient-list .low {
+  color: var(--color-error);
+  font-weight: 700;
+}
+
+ct-payment-list .selector {
+  justify-content: space-between;
+}
+
+ct-payment-list .selector mat-form-field {
+  min-width: 280px;
+  flex: 1 1 320px;
+}
+
+ct-payment-list .inline-status {
+  width: 176px;
+}
+
+ct-confirm-dialog h2[mat-dialog-title] {
+  color: var(--color-text-primary);
+  font-family: 'Playfair Display', 'Lora', Georgia, serif;
+  font-size: var(--text-lg);
+}
+
+ct-confirm-dialog mat-dialog-content {
+  color: var(--color-text-body);
+  font-size: var(--text-base);
+}
+
+ct-confirm-dialog mat-dialog-actions {
+  gap: var(--space-3);
+}
+
+ct-loading-spinner .spinner-backdrop {
+  background: rgba(30, 58, 15, 0.18);
+}
+
+@media (max-width: 768px) {
+  ct-shell .shell {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+    padding: var(--space-4);
+  }
+
+  ct-shell .sidebar {
+    position: static;
+    padding: var(--space-4);
+  }
+
+  ct-shell nav {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  }
+
+  ct-shell .topbar {
+    padding: var(--space-4);
+  }
+
+  ct-shell .workspace {
+    width: 100%;
+  }
+
+  .page-shell {
+    gap: var(--space-6);
+  }
+
+  .page-header {
+    align-items: stretch;
+  }
+
+  ct-payment-list .selector,
+  ct-order-form .items-header,
+  ct-recipe-form .items-header {
+    align-items: stretch;
+  }
+}
