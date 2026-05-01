@@ -5,6 +5,8 @@ export const paymentsActions = createActionGroup({
   source: 'Payments',
   events: {
     'Reset Payments': emptyProps(),
+    'Load Payments': emptyProps(),
+    'Load Payments Success': props<{ payments: Payment[] }>(),
     'Load Payments By Order': props<{ orderId: string }>(),
     'Load Payments By Order Success': props<{ payments: Payment[]; orderId: string }>(),
     'Load Payments Failure': props<{ error: string }>(),
@@ -12,4 +14,3 @@ export const paymentsActions = createActionGroup({
     'Update Payment Status': props<{ id: string; orderId: string; status: PaymentStatus }>()
   }
 });
-

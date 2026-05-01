@@ -22,7 +22,7 @@ import { selectAllRecipes } from '../../store/recipes.selectors';
       <section class="page-card table-card">
         <table mat-table [dataSource]="(pagedRecipes$ | async) ?? []">
           <ng-container matColumnDef="name"><th mat-header-cell *matHeaderCellDef>Nombre</th><td mat-cell *matCellDef="let recipe">{{ recipe.name }}</td></ng-container>
-          <ng-container matColumnDef="product_name"><th mat-header-cell *matHeaderCellDef>Producto</th><td mat-cell *matCellDef="let recipe">{{ recipe.product_name ?? recipe.product_id }}</td></ng-container>
+          <ng-container matColumnDef="product_name"><th mat-header-cell *matHeaderCellDef>Producto</th><td mat-cell *matCellDef="let recipe">{{ recipe.product_name ?? 'Sin nombre' }}</td></ng-container>
           <ng-container matColumnDef="servings"><th mat-header-cell *matHeaderCellDef>Porciones</th><td mat-cell *matCellDef="let recipe">{{ recipe.servings }}</td></ng-container>
           <ng-container matColumnDef="cost"><th mat-header-cell *matHeaderCellDef>Costo API</th><td mat-cell *matCellDef="let recipe">{{ recipe.cost ?? 0 | currencyCop }}</td></ng-container>
           <ng-container matColumnDef="actions"><th mat-header-cell *matHeaderCellDef></th><td mat-cell *matCellDef="let recipe"><button mat-icon-button (click)="router.navigate(['/recipes', recipe.product_id])"><mat-icon>visibility</mat-icon></button></td></ng-container>

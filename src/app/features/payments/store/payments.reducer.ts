@@ -21,11 +21,17 @@ export const initialPaymentState: PaymentState = {
 export const paymentsReducer = createReducer(
   initialPaymentState,
   on(paymentsActions.resetPayments, () => initialPaymentState),
-  on(paymentsActions.loadPaymentsByOrder, paymentsActions.createPayment, paymentsActions.updatePaymentStatus, (state, action) => ({
+  on(paymentsActions.loadPayments, paymentsActions.loadPaymentsByOrder, paymentsActions.createPayment, paymentsActions.updatePaymentStatus, (state, action) => ({
     ...state,
     selectedOrderId: 'orderId' in action ? action.orderId : state.selectedOrderId,
     loading: true,
     error: null
+  })),
+  on(paymentsActions.loadPaymentsSuccess, (state, { payments }) => ({
+    ...state,
+    payments,
+    selectedOrderId: null,
+    loading: false
   })),
   on(paymentsActions.loadPaymentsByOrderSuccess, (state, { payments, orderId }) => ({
     ...state,
@@ -35,4 +41,3 @@ export const paymentsReducer = createReducer(
   })),
   on(paymentsActions.loadPaymentsFailure, (state, { error }) => ({ ...state, error, loading: false }))
 );
-

@@ -11,6 +11,18 @@ export class PaymentsEffects {
   private readonly paymentsService = inject(PaymentsService);
   private readonly notifier = inject(NotifierService);
 
+  loadAll$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(paymentsActions.loadPayments),
+      mergeMap(() =>
+        this.paymentsService.list().pipe(
+          map((payments) => paymentsActions.loadPaymentsSuccess({ payments })),
+          catchError(() => of(paymentsActions.loadPaymentsFailure({ error: 'No fue posible cargar pagos.' })))
+        )
+      )
+    )
+  );
+
   load$ = createEffect(() =>
     this.actions$.pipe(
       ofType(paymentsActions.loadPaymentsByOrder),
@@ -28,7 +40,7 @@ export class PaymentsEffects {
       ofType(paymentsActions.createPayment),
       mergeMap(({ payload }) =>
         this.paymentsService.create(payload).pipe(
-          map(() => paymentsActions.loadPaymentsByOrder({ orderId: payload.order_id })),
+          map(() => paymentsActions.loadPayments()),
           tap(() => this.notifier.success('Pago registrado correctamente.')),
           catchError(() => {
             this.notifier.error('No fue posible registrar el pago.');
@@ -44,7 +56,7 @@ export class PaymentsEffects {
       ofType(paymentsActions.updatePaymentStatus),
       mergeMap(({ id, orderId, status }) =>
         this.paymentsService.updateStatus(id, status).pipe(
-          map(() => paymentsActions.loadPaymentsByOrder({ orderId })),
+          map(() => orderId ? paymentsActions.loadPaymentsByOrder({ orderId }) : paymentsActions.loadPayments()),
           tap(() => this.notifier.success('Estado del pago actualizado.')),
           catchError(() => {
             this.notifier.error('No fue posible actualizar el pago.');
@@ -55,4 +67,3 @@ export class PaymentsEffects {
     )
   );
 }
-

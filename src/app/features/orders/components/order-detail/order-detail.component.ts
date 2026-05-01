@@ -17,8 +17,8 @@ import { selectSelectedOrder } from '../../store/orders.selectors';
   template: `
     <div class="page-shell" *ngIf="order$ | async as order">
       <mat-card class="page-card detail-card">
-        <h1>Pedido {{ order.id }}</h1>
-        <p>Cliente: {{ order.customer_name ?? order.customer_id }}</p>
+        <h1>Orden {{ order.order_label ?? 'Sin consecutivo' }}</h1>
+        <p>Cliente: {{ order.customer_name ?? 'Sin nombre' }}</p>
         <p>Subtotal: {{ order.subtotal | currencyCop }}</p>
         <p>Descuento: {{ order.discount | currencyCop }}</p>
         <p>Total: {{ order.total | currencyCop }}</p>
@@ -36,9 +36,9 @@ import { selectSelectedOrder } from '../../store/orders.selectors';
       <mat-card class="page-card detail-card">
         <h2>Ítems</h2>
         <div class="row" *ngFor="let item of order.items">
-          <span>{{ item.product_name ?? item.product_id }}</span>
+          <span>{{ item.product_name ?? 'Sin nombre' }}</span>
           <span>{{ item.quantity }}</span>
-          <span>{{ item.total ?? 0 | currencyCop }}</span>
+          <span>{{ item.subtotal ?? item.total ?? 0 | currencyCop }}</span>
         </div>
       </mat-card>
 
@@ -72,4 +72,3 @@ export class OrderDetailComponent implements OnInit {
     this.store.dispatch(ordersActions.loadOrderDetail({ id }));
   }
 }
-

@@ -3,7 +3,6 @@ import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, concatMap, defaultIfEmpty, from, last, map, mergeMap, of, switchMap, tap } from 'rxjs';
-import { ProductsService } from '../../../core/services/products.service';
 import { RecipesService } from '../../../core/services/recipes.service';
 import { NotifierService } from '../../../core/services/notifier.service';
 import { recipesActions } from './recipes.actions';
@@ -12,7 +11,6 @@ import { recipesActions } from './recipes.actions';
 export class RecipesEffects {
   private readonly actions$ = inject(Actions);
   private readonly router = inject(Router);
-  private readonly productsService = inject(ProductsService);
   private readonly recipesService = inject(RecipesService);
   private readonly notifier = inject(NotifierService);
 
@@ -59,8 +57,7 @@ export class RecipesEffects {
     this.actions$.pipe(
       ofType(recipesActions.loadRecipes),
       switchMap(() =>
-        this.productsService.list().pipe(
-          switchMap((products) => this.recipesService.list(products)),
+        this.recipesService.list().pipe(
           map((recipes) => recipesActions.loadRecipesSuccess({ recipes })),
           catchError((error: unknown) =>
             of(

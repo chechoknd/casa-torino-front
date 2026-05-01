@@ -1,6 +1,6 @@
-import { AsyncPipe, DatePipe, NgFor, NgIf } from '@angular/common';
+import { AsyncPipe, DatePipe, NgFor } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -10,20 +10,19 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { Store } from '@ngrx/store';
-import { customersActions } from '../../../customers/store/customers.actions';
-import { productsActions } from '../../../products/store/products.actions';
+import { combineLatest, map, startWith } from 'rxjs';
 import { ordersActions } from '../../../orders/store/orders.actions';
 import { selectAllOrders } from '../../../orders/store/orders.selectors';
+import { Payment } from '../../../../core/models/payment.model';
 import { StatusBadgeComponent } from '../../../../shared/components/status-badge/status-badge.component';
 import { CurrencyCopPipe } from '../../../../shared/pipes/currency-cop.pipe';
-import { positiveNumberValidator } from '../../../../shared/validators/positive-number.validator';
 import { paymentsActions } from '../../store/payments.actions';
 import { selectAllPayments } from '../../store/payments.selectors';
 
 @Component({
   selector: 'ct-payment-list',
   standalone: true,
-  imports: [AsyncPipe, DatePipe, NgFor, NgIf, ReactiveFormsModule, MatButtonModule, MatCardModule, MatFormFieldModule, MatIconModule, MatInputModule, MatSelectModule, MatTableModule, StatusBadgeComponent, CurrencyCopPipe],
+  imports: [AsyncPipe, DatePipe, NgFor, ReactiveFormsModule, MatButtonModule, MatCardModule, MatFormFieldModule, MatIconModule, MatInputModule, MatSelectModule, MatTableModule, StatusBadgeComponent, CurrencyCopPipe],
   template: `
     <div class="page-shell">
       <mat-card class="page-card form-card">
@@ -32,7 +31,8 @@ import { selectAllPayments } from '../../store/payments.selectors';
           <mat-form-field appearance="outline">
             <mat-label>Pedido</mat-label>
             <mat-select formControlName="orderId" (valueChange)="loadPayments($event)">
-              <mat-option *ngFor="let order of orders$ | async" [value]="order.id">{{ order.id }} · {{ order.total | currencyCop }}</mat-option>
+              <mat-option value="">Todos los pagos</mat-option>
+              <mat-option *ngFor="let order of orders$ | async" [value]="order.id">{{ order.order_label ?? 'Sin consecutivo' }} · {{ order.customer_name ?? 'Sin nombre' }} · {{ order.total | currencyCop }}</mat-option>
             </mat-select>
           </mat-form-field>
           <button mat-flat-button color="primary" type="button" (click)="router.navigate(['/payments/new'], { queryParams: { orderId: selectorForm.value.orderId } })" [disabled]="!selectorForm.value.orderId">
@@ -41,8 +41,10 @@ import { selectAllPayments } from '../../store/payments.selectors';
         </form>
       </mat-card>
 
-      <mat-card class="page-card table-card" *ngIf="selectorForm.value.orderId">
-        <table mat-table [dataSource]="(payments$ | async) ?? []">
+      <mat-card class="page-card table-card">
+        <table mat-table [dataSource]="(filteredPayments$ | async) ?? []">
+          <ng-container matColumnDef="order"><th mat-header-cell *matHeaderCellDef>Orden</th><td mat-cell *matCellDef="let payment">{{ payment.order_label ?? 'Sin consecutivo' }}</td></ng-container>
+          <ng-container matColumnDef="products"><th mat-header-cell *matHeaderCellDef>Productos</th><td mat-cell *matCellDef="let payment">{{ productNames(payment) }}</td></ng-container>
           <ng-container matColumnDef="amount"><th mat-header-cell *matHeaderCellDef>Monto</th><td mat-cell *matCellDef="let payment">{{ payment.amount | currencyCop }}</td></ng-container>
           <ng-container matColumnDef="method"><th mat-header-cell *matHeaderCellDef>Método</th><td mat-cell *matCellDef="let payment">{{ payment.method }}</td></ng-container>
           <ng-container matColumnDef="status"><th mat-header-cell *matHeaderCellDef>Estado</th><td mat-cell *matCellDef="let payment"><ct-status-badge [label]="payment.status" [tone]="payment.status === 'FAILED' ? 'danger' : payment.status === 'PAID' ? 'success' : 'warning'" /></td></ng-container>
@@ -51,7 +53,7 @@ import { selectAllPayments } from '../../store/payments.selectors';
             <th mat-header-cell *matHeaderCellDef></th>
             <td mat-cell *matCellDef="let payment">
               <mat-form-field appearance="outline" class="inline-status">
-                <mat-select [value]="payment.status" (valueChange)="updateStatus(payment.id, $event)">
+                <mat-select [value]="payment.status" (valueChange)="updateStatus(payment.id, payment.order_id, $event)">
                   <mat-option *ngFor="let status of statuses" [value]="status">{{ status }}</mat-option>
                 </mat-select>
               </mat-form-field>
@@ -71,37 +73,55 @@ export class PaymentListComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly store = inject(Store);
   private readonly fb = inject(FormBuilder);
+  protected readonly selectorForm = this.fb.group({
+    orderId: ['']
+  });
   protected readonly orders$ = this.store.select(selectAllOrders);
   protected readonly payments$ = this.store.select(selectAllPayments);
-  protected readonly displayedColumns = ['amount', 'method', 'status', 'created_at', 'actions'];
+  protected readonly filteredPayments$ = combineLatest([
+    this.payments$,
+    this.selectorForm.valueChanges.pipe(startWith(this.selectorForm.value))
+  ]).pipe(
+    map(([payments]) => {
+      const orderId = this.selectorForm.value.orderId;
+      return orderId ? payments.filter((payment) => payment.order_id === orderId) : payments;
+    })
+  );
+  protected readonly displayedColumns = ['order', 'products', 'amount', 'method', 'status', 'created_at', 'actions'];
   protected readonly statuses = ['PENDING', 'PAID', 'PARTIAL', 'FAILED', 'REFUNDED'];
 
-  protected readonly selectorForm = this.fb.group({
-    orderId: ['', Validators.required]
-  });
-
   ngOnInit(): void {
-    this.store.dispatch(customersActions.loadCustomers());
-    this.store.dispatch(productsActions.loadProducts());
     this.store.dispatch(ordersActions.loadOrders());
+    this.store.dispatch(paymentsActions.loadPayments());
 
     const orderId = this.route.snapshot.queryParamMap.get('orderId');
     if (orderId) {
       this.selectorForm.patchValue({ orderId });
-      this.loadPayments(orderId);
     }
   }
 
   protected loadPayments(orderId: string): void {
     if (orderId) {
       this.store.dispatch(paymentsActions.loadPaymentsByOrder({ orderId }));
+      return;
     }
+
+    this.store.dispatch(paymentsActions.loadPayments());
   }
 
-  protected updateStatus(id: string, status: 'PENDING' | 'PAID' | 'PARTIAL' | 'FAILED' | 'REFUNDED'): void {
-    const orderId = this.selectorForm.value.orderId;
+  protected updateStatus(id: string, orderId: string, status: 'PENDING' | 'PAID' | 'PARTIAL' | 'FAILED' | 'REFUNDED'): void {
     if (orderId) {
       this.store.dispatch(paymentsActions.updatePaymentStatus({ id, orderId, status }));
     }
+  }
+
+  protected productNames(payment: Payment): string {
+    if (!payment.products?.length) {
+      return 'Sin productos';
+    }
+
+    return payment.products
+      .map((product) => product.product_name?.trim() || 'Sin nombre')
+      .join(', ');
   }
 }

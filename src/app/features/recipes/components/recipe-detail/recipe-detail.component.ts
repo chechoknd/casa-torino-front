@@ -15,7 +15,7 @@ import { selectSelectedRecipe } from '../../store/recipes.selectors';
     <div class="page-shell" *ngIf="recipe$ | async as recipe">
       <mat-card class="page-card detail-card">
         <h1>{{ recipe.name }}</h1>
-        <p>Producto: {{ recipe.product_name ?? recipe.product_id }}</p>
+        <p>Producto: {{ recipe.product_name ?? 'Sin nombre' }}</p>
         <p>Porciones: {{ recipe.servings }}</p>
         <p>Costo calculado: {{ recipe.cost ?? 0 | currencyCop }}</p>
       </mat-card>
@@ -43,4 +43,3 @@ export class RecipeDetailComponent implements OnInit {
     }
   }
 }
-

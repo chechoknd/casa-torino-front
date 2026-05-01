@@ -9,11 +9,16 @@ export type OrderStatus =
 export interface Order {
   id: string;
   customer_id: string;
+  customer_name?: string;
+  order_number?: number | string;
+  order_label?: string;
   status: OrderStatus;
+  items?: OrderItem[];
   subtotal: number;
   discount: number;
   total: number;
   created_at: string;
+  updated_at?: string;
 }
 
 export interface OrderItemPayload {
@@ -21,19 +26,21 @@ export interface OrderItemPayload {
   quantity: number;
 }
 
+export interface OrderItem {
+  id?: string;
+  order_id?: string;
+  product_id: string;
+  product_name?: string;
+  quantity: number;
+  unit_price?: number;
+  subtotal?: number;
+  total?: number;
+}
+
 export interface OrderDetail extends Order {
-  customer_name?: string;
-  items: Array<{
-    id?: string;
-    product_id: string;
-    product_name?: string;
-    quantity: number;
-    unit_price?: number;
-    total?: number;
-  }>;
+  items: OrderItem[];
   status_history?: Array<{
     status: OrderStatus;
     changed_at: string;
   }>;
 }
-

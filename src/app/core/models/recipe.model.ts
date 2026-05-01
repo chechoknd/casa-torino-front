@@ -4,7 +4,11 @@ export interface Recipe {
   id: string;
   name: string;
   product_id: string;
+  product_name?: string;
+  portions?: number;
   servings: number;
+  created_at?: string;
+  updated_at?: string;
   is_active?: boolean;
 }
 
@@ -23,7 +27,5 @@ export interface RecipeCost {
 
 export interface RecipeDetail extends Recipe {
   items: RecipeItem[];
-  product_name?: string;
   cost?: number;
 }
-

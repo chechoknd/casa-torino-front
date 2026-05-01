@@ -28,7 +28,7 @@ import { StatusBadgeComponent } from '../../shared/components/status-badge/statu
         <h2>Últimos 5 pedidos</h2>
         <div class="latest-row" *ngFor="let order of vm.latestOrders">
           <div>
-            <strong>{{ order.id }}</strong>
+            <strong>{{ order.order_label ?? 'Sin consecutivo' }}</strong>
             <small>{{ order.created_at | date: 'short' }}</small>
           </div>
           <ct-status-badge [label]="order.status" [tone]="order.status === 'DELIVERED' ? 'success' : order.status === 'CANCELLED' ? 'danger' : 'info'" />

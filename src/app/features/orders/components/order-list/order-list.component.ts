@@ -6,12 +6,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { Store } from '@ngrx/store';
-import { combineLatest, map } from 'rxjs';
-import { selectAllCustomers } from '../../../customers/store/customers.selectors';
+import { map } from 'rxjs';
+import { Order } from '../../../../core/models/order.model';
 import { StatusBadgeComponent } from '../../../../shared/components/status-badge/status-badge.component';
 import { CurrencyCopPipe } from '../../../../shared/pipes/currency-cop.pipe';
 import { EntityToolbarComponent } from '../../../../shared/components/entity-toolbar/entity-toolbar.component';
-import { customersActions } from '../../../customers/store/customers.actions';
 import { ordersActions } from '../../store/orders.actions';
 import { selectAllOrders } from '../../store/orders.selectors';
 
@@ -24,7 +23,9 @@ import { selectAllOrders } from '../../store/orders.selectors';
       <ct-entity-toolbar title="Pedidos" subtitle="Seguimiento operativo y flujo de estados." actionLabel="Nuevo pedido" (create)="router.navigate(['/orders/new'])" />
       <section class="page-card table-card">
         <table mat-table [dataSource]="(pagedOrders$ | async) ?? []">
-          <ng-container matColumnDef="customer"><th mat-header-cell *matHeaderCellDef>Cliente</th><td mat-cell *matCellDef="let order">{{ order.customer_name }}</td></ng-container>
+          <ng-container matColumnDef="order"><th mat-header-cell *matHeaderCellDef>Orden</th><td mat-cell *matCellDef="let order">{{ order.order_label ?? 'Sin consecutivo' }}</td></ng-container>
+          <ng-container matColumnDef="customer"><th mat-header-cell *matHeaderCellDef>Cliente</th><td mat-cell *matCellDef="let order">{{ order.customer_name ?? 'Sin nombre' }}</td></ng-container>
+          <ng-container matColumnDef="products"><th mat-header-cell *matHeaderCellDef>Productos</th><td mat-cell *matCellDef="let order">{{ productNames(order) }}</td></ng-container>
           <ng-container matColumnDef="total"><th mat-header-cell *matHeaderCellDef>Total</th><td mat-cell *matCellDef="let order">{{ order.total | currencyCop }}</td></ng-container>
           <ng-container matColumnDef="status"><th mat-header-cell *matHeaderCellDef>Estado</th><td mat-cell *matCellDef="let order"><ct-status-badge [label]="order.status" [tone]="statusTone(order.status)" /></td></ng-container>
           <ng-container matColumnDef="created_at"><th mat-header-cell *matHeaderCellDef>Fecha</th><td mat-cell *matCellDef="let order">{{ order.created_at | date: 'short' }}</td></ng-container>
@@ -42,27 +43,16 @@ import { selectAllOrders } from '../../store/orders.selectors';
 export class OrderListComponent implements OnInit {
   protected readonly router = inject(Router);
   private readonly store = inject(Store);
-  protected readonly displayedColumns = ['customer', 'total', 'status', 'created_at', 'actions'];
+  protected readonly displayedColumns = ['order', 'customer', 'products', 'total', 'status', 'created_at', 'actions'];
   protected pageIndex = 0;
   protected pageSize = 10;
-  protected readonly ordersVm$ = combineLatest([
-    this.store.select(selectAllOrders),
-    this.store.select(selectAllCustomers)
-  ]).pipe(
-    map(([orders, customers]) =>
-      orders.map((order) => ({
-        ...order,
-        customer_name: customers.find((customer) => customer.id === order.customer_id)?.full_name ?? order.customer_id
-      }))
-    )
-  );
+  protected readonly ordersVm$ = this.store.select(selectAllOrders);
   protected readonly total$ = this.ordersVm$.pipe(map((orders) => orders.length));
   protected readonly pagedOrders$ = this.ordersVm$.pipe(
     map((orders) => orders.slice(this.pageIndex * this.pageSize, this.pageIndex * this.pageSize + this.pageSize))
   );
 
   ngOnInit(): void {
-    this.store.dispatch(customersActions.loadCustomers());
     this.store.dispatch(ordersActions.loadOrders());
   }
 
@@ -77,5 +67,15 @@ export class OrderListComponent implements OnInit {
     if (status === 'CANCELLED') return 'danger';
     if (status === 'PENDING') return 'warning';
     return 'info';
+  }
+
+  protected productNames(order: Order): string {
+    if (!order.items?.length) {
+      return 'Sin productos';
+    }
+
+    return order.items
+      .map((item) => item.product_name?.trim() || 'Sin nombre')
+      .join(', ');
   }
 }

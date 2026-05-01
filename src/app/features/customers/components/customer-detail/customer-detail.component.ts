@@ -30,7 +30,7 @@ import { ordersActions } from '../../../orders/store/orders.actions';
       <mat-card class="page-card detail-card">
         <h2>Historial de pedidos</h2>
         <div class="history" *ngFor="let order of vm.orders">
-          <strong>{{ order.id }}</strong>
+          <strong>{{ order.order_label ?? 'Sin consecutivo' }}</strong>
           <span>{{ order.status }}</span>
           <small>{{ order.created_at | date: 'short' }}</small>
         </div>
@@ -79,4 +79,3 @@ export class CustomerDetailComponent implements OnInit {
     }
   }
 }
-
