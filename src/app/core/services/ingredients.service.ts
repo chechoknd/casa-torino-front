@@ -14,15 +14,23 @@ export class IngredientsService extends ApiBaseService {
   }
 
   create(payload: Omit<Ingredient, 'id' | 'is_active'>): Observable<Ingredient> {
-    return this.post<Ingredient>('/ingredients', payload);
+    return this.post<Ingredient>('/ingredients', this.toPayload(payload));
   }
 
   update(id: string, payload: Partial<Omit<Ingredient, 'id'>>): Observable<Ingredient> {
-    return this.put<Ingredient>(`/ingredients/${id}`, payload);
+    return this.put<Ingredient>(`/ingredients/${id}`, this.toPayload(payload));
   }
 
   deactivate(id: string): Observable<void> {
     return this.delete<void>(`/ingredients/${id}`);
   }
-}
 
+  private toPayload(payload: Partial<Omit<Ingredient, 'id'>>): unknown {
+    return {
+      ...payload,
+      ...(payload.average_cost !== undefined ? { average_cost: this.decimal(payload.average_cost) } : {}),
+      ...(payload.stock !== undefined ? { stock: this.decimal(payload.stock) } : {}),
+      ...(payload.minimum_stock !== undefined ? { minimum_stock: this.decimal(payload.minimum_stock) } : {})
+    };
+  }
+}

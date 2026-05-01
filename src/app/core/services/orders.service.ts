@@ -5,8 +5,9 @@ import { ApiBaseService } from './api-base.service';
 
 @Injectable({ providedIn: 'root' })
 export class OrdersService extends ApiBaseService {
-  list(): Observable<Order[]> {
-    return this.get<Order[]>('/orders');
+  list(customerId?: string): Observable<Order[]> {
+    const query = customerId ? `?customer_id=${encodeURIComponent(customerId)}` : '';
+    return this.get<Order[]>(`/orders${query}`);
   }
 
   detail(id: string): Observable<OrderDetail> {
@@ -14,7 +15,10 @@ export class OrdersService extends ApiBaseService {
   }
 
   create(payload: { customer_id: string; discount?: number }): Observable<Order> {
-    return this.post<Order>('/orders', payload);
+    return this.post<Order>('/orders', {
+      ...payload,
+      discount: this.decimal(payload.discount ?? 0)
+    });
   }
 
   addItem(orderId: string, payload: OrderItemPayload): Observable<OrderDetail> {
@@ -25,4 +29,3 @@ export class OrdersService extends ApiBaseService {
     return this.patch<OrderDetail>(`/orders/${id}/status`, { status });
   }
 }
-

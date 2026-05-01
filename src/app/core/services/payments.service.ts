@@ -6,7 +6,10 @@ import { ApiBaseService } from './api-base.service';
 @Injectable({ providedIn: 'root' })
 export class PaymentsService extends ApiBaseService {
   create(payload: Omit<Payment, 'id' | 'created_at'>): Observable<Payment> {
-    return this.post<Payment>('/payments', payload);
+    return this.post<Payment>('/payments', {
+      ...payload,
+      amount: this.decimal(payload.amount)
+    });
   }
 
   listByOrder(orderId: string): Observable<Payment[]> {
@@ -17,4 +20,3 @@ export class PaymentsService extends ApiBaseService {
     return this.patch<Payment>(`/payments/${id}/status`, { status });
   }
 }
-

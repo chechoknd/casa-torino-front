@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { forkJoin, map, Observable, of, switchMap } from 'rxjs';
+import { catchError, forkJoin, map, Observable, of, switchMap } from 'rxjs';
 import { Recipe, RecipeCost, RecipeDetail, RecipeItem } from '../models/recipe.model';
 import { ApiBaseService } from './api-base.service';
 
@@ -10,24 +10,37 @@ export class RecipesService extends ApiBaseService {
       return of([]);
     }
 
-    return forkJoin(products.map((product) => this.detailByProduct(product.id))).pipe(
-      map((recipes) => recipes.filter((recipe): recipe is RecipeDetail => Boolean(recipe)))
+    return forkJoin(
+      products.map((product) =>
+        this.detailByProduct(product.id).pipe(catchError(() => of(null)))
+      )
+    ).pipe(
+      map((recipes) => recipes.filter((recipe): recipe is RecipeDetail => recipe !== null))
     );
   }
 
   create(payload: Omit<Recipe, 'id'>): Observable<Recipe> {
-    return this.post<Recipe>('/recipes', payload);
+    return this.post<Recipe>('/recipes', {
+      product_id: payload.product_id,
+      name: payload.name,
+      portions: payload.servings
+    });
   }
 
   addItem(id: string, payload: RecipeItem): Observable<RecipeItem> {
-    return this.post<RecipeItem>(`/recipes/${id}/items`, payload);
+    return this.post<RecipeItem>(`/recipes/${id}/items`, {
+      ingredient_id: payload.ingredient_id,
+      quantity: this.decimal(payload.quantity),
+      unit: payload.unit
+    });
   }
 
   detailByProduct(productId: string): Observable<RecipeDetail> {
     return this.get<RecipeDetail>(`/recipes/product/${productId}`).pipe(
       switchMap((recipe) =>
         this.get<RecipeCost>(`/recipes/${recipe.id}/cost`).pipe(
-          map((cost) => ({ ...recipe, cost: cost.total_cost }))
+          map((cost) => ({ ...recipe, cost: cost.total_cost })),
+          catchError(() => of({ ...recipe }))
         )
       )
     );
