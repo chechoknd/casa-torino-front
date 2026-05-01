@@ -25,8 +25,8 @@ export const recipesReducer = createReducer(
     loading: true,
     error: null
   })),
+  on(recipesActions.createRecipeSuccess, (state) => ({ ...state, loading: false })),
   on(recipesActions.loadRecipesSuccess, (state, { recipes }) => ({ ...state, recipes, loading: false })),
   on(recipesActions.loadRecipeDetailSuccess, (state, { recipe }) => ({ ...state, selected: recipe, loading: false })),
   on(recipesActions.loadRecipesFailure, (state, { error }) => ({ ...state, error, loading: false }))
 );
-

@@ -123,6 +123,5 @@ export class RecipeFormComponent implements OnInit {
         }
       })
     );
-    this.router.navigate(['/recipes']);
   }
 }

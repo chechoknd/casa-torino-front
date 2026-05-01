@@ -1,5 +1,5 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
-import { RecipeDetail, RecipeItem } from '../../../core/models/recipe.model';
+import { Recipe, RecipeDetail, RecipeItem } from '../../../core/models/recipe.model';
 
 export const recipesActions = createActionGroup({
   source: 'Recipes',
@@ -9,7 +9,7 @@ export const recipesActions = createActionGroup({
     'Load Recipes Failure': props<{ error: string }>(),
     'Load Recipe Detail': props<{ productId: string }>(),
     'Load Recipe Detail Success': props<{ recipe: RecipeDetail }>(),
-    'Create Recipe': props<{ payload: { name: string; product_id: string; servings: number; items: RecipeItem[] } }>()
+    'Create Recipe': props<{ payload: { name: string; product_id: string; servings: number; items: RecipeItem[] } }>(),
+    'Create Recipe Success': props<{ recipe: Recipe }>()
   }
 });
-
