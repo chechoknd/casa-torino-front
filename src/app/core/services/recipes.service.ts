@@ -5,17 +5,14 @@ import { ApiBaseService } from './api-base.service';
 
 @Injectable({ providedIn: 'root' })
 export class RecipesService extends ApiBaseService {
-  list(products: Array<{ id: string; name?: string }>): Observable<RecipeDetail[]> {
+  list(products: Array<{ id: string }>): Observable<RecipeDetail[]> {
     if (!products.length) {
       return of([]);
     }
 
     return forkJoin(
       products.map((product) =>
-        this.detailByProduct(product.id).pipe(
-          map((recipe): RecipeDetail => product.name ? { ...recipe, product_name: recipe.product_name ?? product.name } : recipe),
-          catchError(() => of(null))
-        )
+        this.detailByProduct(product.id).pipe(catchError(() => of(null)))
       )
     ).pipe(
       map((recipes) => recipes.filter((recipe): recipe is RecipeDetail => recipe !== null))

@@ -7,11 +7,10 @@ import { customersActions } from '../customers/store/customers.actions';
 import { selectActiveCustomers } from '../customers/store/customers.selectors';
 import { ingredientsActions } from '../ingredients/store/ingredients.actions';
 import { ordersActions } from '../orders/store/orders.actions';
-import { selectAllOrders, selectLatestOrders, selectPendingOrdersToday } from '../orders/store/orders.selectors';
+import { selectLatestOrders, selectPendingOrdersToday } from '../orders/store/orders.selectors';
 import { productsActions } from '../products/store/products.actions';
 import { selectActiveProducts } from '../products/store/products.selectors';
 import { StatusBadgeComponent } from '../../shared/components/status-badge/status-badge.component';
-import { orderDisplayNumber } from '../../shared/utils/order-display';
 
 @Component({
   selector: 'ct-dashboard',
@@ -29,7 +28,7 @@ import { orderDisplayNumber } from '../../shared/utils/order-display';
         <h2>Últimos 5 pedidos</h2>
         <div class="latest-row" *ngFor="let order of vm.latestOrders">
           <div>
-            <strong>Orden {{ order.display_number }}</strong>
+            <strong>{{ order.id }}</strong>
             <small>{{ order.created_at | date: 'short' }}</small>
           </div>
           <ct-status-badge [label]="order.status" [tone]="order.status === 'DELIVERED' ? 'success' : order.status === 'CANCELLED' ? 'danger' : 'info'" />
@@ -46,17 +45,13 @@ export class DashboardComponent implements OnInit {
     this.store.select(selectActiveCustomers),
     this.store.select(selectActiveProducts),
     this.store.select(selectPendingOrdersToday),
-    this.store.select(selectLatestOrders),
-    this.store.select(selectAllOrders)
+    this.store.select(selectLatestOrders)
   ]).pipe(
-    map(([customers, products, pendingOrders, latestOrders, orders]) => ({
+    map(([customers, products, pendingOrders, latestOrders]) => ({
       activeCustomers: customers.length,
       activeProducts: products.length,
       pendingToday: pendingOrders.length,
-      latestOrders: latestOrders.map((order) => ({
-        ...order,
-        display_number: orderDisplayNumber(order, orders)
-      }))
+      latestOrders
     }))
   );
 

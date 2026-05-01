@@ -8,15 +8,12 @@ import { MatTableModule } from '@angular/material/table';
 import { Store } from '@ngrx/store';
 import { combineLatest, map } from 'rxjs';
 import { selectAllCustomers } from '../../../customers/store/customers.selectors';
-import { selectAllProducts } from '../../../products/store/products.selectors';
 import { StatusBadgeComponent } from '../../../../shared/components/status-badge/status-badge.component';
 import { CurrencyCopPipe } from '../../../../shared/pipes/currency-cop.pipe';
 import { EntityToolbarComponent } from '../../../../shared/components/entity-toolbar/entity-toolbar.component';
 import { customersActions } from '../../../customers/store/customers.actions';
-import { productsActions } from '../../../products/store/products.actions';
 import { ordersActions } from '../../store/orders.actions';
 import { selectAllOrders } from '../../store/orders.selectors';
-import { orderDisplayNumber, productNamesFromItems } from '../../../../shared/utils/order-display';
 
 @Component({
   selector: 'ct-order-list',
@@ -27,9 +24,7 @@ import { orderDisplayNumber, productNamesFromItems } from '../../../../shared/ut
       <ct-entity-toolbar title="Pedidos" subtitle="Seguimiento operativo y flujo de estados." actionLabel="Nuevo pedido" (create)="router.navigate(['/orders/new'])" />
       <section class="page-card table-card">
         <table mat-table [dataSource]="(pagedOrders$ | async) ?? []">
-          <ng-container matColumnDef="number"><th mat-header-cell *matHeaderCellDef>Orden</th><td mat-cell *matCellDef="let order">{{ order.display_number }}</td></ng-container>
           <ng-container matColumnDef="customer"><th mat-header-cell *matHeaderCellDef>Cliente</th><td mat-cell *matCellDef="let order">{{ order.customer_name }}</td></ng-container>
-          <ng-container matColumnDef="products"><th mat-header-cell *matHeaderCellDef>Productos</th><td mat-cell *matCellDef="let order">{{ order.product_names }}</td></ng-container>
           <ng-container matColumnDef="total"><th mat-header-cell *matHeaderCellDef>Total</th><td mat-cell *matCellDef="let order">{{ order.total | currencyCop }}</td></ng-container>
           <ng-container matColumnDef="status"><th mat-header-cell *matHeaderCellDef>Estado</th><td mat-cell *matCellDef="let order"><ct-status-badge [label]="order.status" [tone]="statusTone(order.status)" /></td></ng-container>
           <ng-container matColumnDef="created_at"><th mat-header-cell *matHeaderCellDef>Fecha</th><td mat-cell *matCellDef="let order">{{ order.created_at | date: 'short' }}</td></ng-container>
@@ -47,20 +42,17 @@ import { orderDisplayNumber, productNamesFromItems } from '../../../../shared/ut
 export class OrderListComponent implements OnInit {
   protected readonly router = inject(Router);
   private readonly store = inject(Store);
-  protected readonly displayedColumns = ['number', 'customer', 'products', 'total', 'status', 'created_at', 'actions'];
+  protected readonly displayedColumns = ['customer', 'total', 'status', 'created_at', 'actions'];
   protected pageIndex = 0;
   protected pageSize = 10;
   protected readonly ordersVm$ = combineLatest([
     this.store.select(selectAllOrders),
-    this.store.select(selectAllCustomers),
-    this.store.select(selectAllProducts)
+    this.store.select(selectAllCustomers)
   ]).pipe(
-    map(([orders, customers, products]) =>
+    map(([orders, customers]) =>
       orders.map((order) => ({
         ...order,
-        display_number: orderDisplayNumber(order, orders),
-        customer_name: customers.find((customer) => customer.id === order.customer_id)?.full_name ?? 'Cliente sin nombre',
-        product_names: productNamesFromItems(order.items, products)
+        customer_name: customers.find((customer) => customer.id === order.customer_id)?.full_name ?? order.customer_id
       }))
     )
   );
@@ -71,7 +63,6 @@ export class OrderListComponent implements OnInit {
 
   ngOnInit(): void {
     this.store.dispatch(customersActions.loadCustomers());
-    this.store.dispatch(productsActions.loadProducts());
     this.store.dispatch(ordersActions.loadOrders());
   }
 
