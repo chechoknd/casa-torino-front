@@ -50,20 +50,4 @@ export class PaymentsEffects {
       )
     )
   );
-
-  updateStatus$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(paymentsActions.updatePaymentStatus),
-      mergeMap(({ id, orderId, status }) =>
-        this.paymentsService.updateStatus(id, status).pipe(
-          map(() => orderId ? paymentsActions.loadPaymentsByOrder({ orderId }) : paymentsActions.loadPayments()),
-          tap(() => this.notifier.success('Estado del pago actualizado.')),
-          catchError(() => {
-            this.notifier.error('No fue posible actualizar el pago.');
-            return of(paymentsActions.loadPaymentsFailure({ error: 'Error actualizando pago.' }));
-          })
-        )
-      )
-    )
-  );
 }

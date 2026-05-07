@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
-import { Payment, PaymentStatus } from '../models/payment.model';
+import { Payment } from '../models/payment.model';
 import { ApiBaseService } from './api-base.service';
 
 @Injectable({ providedIn: 'root' })
@@ -20,9 +20,5 @@ export class PaymentsService extends ApiBaseService {
     return this.get<Payment[]>('/payments').pipe(
       map((payments) => payments.filter((payment) => payment.order_id === orderId))
     );
-  }
-
-  updateStatus(id: string, status: PaymentStatus): Observable<Payment> {
-    return this.patch<Payment>(`/payments/${id}/status`, { status });
   }
 }

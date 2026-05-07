@@ -5,8 +5,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { Store } from '@ngrx/store';
@@ -22,7 +20,7 @@ import { selectAllPayments } from '../../store/payments.selectors';
 @Component({
   selector: 'ct-payment-list',
   standalone: true,
-  imports: [AsyncPipe, DatePipe, NgFor, ReactiveFormsModule, MatButtonModule, MatCardModule, MatFormFieldModule, MatIconModule, MatInputModule, MatSelectModule, MatTableModule, StatusBadgeComponent, CurrencyCopPipe],
+  imports: [AsyncPipe, DatePipe, NgFor, ReactiveFormsModule, MatButtonModule, MatCardModule, MatFormFieldModule, MatSelectModule, MatTableModule, StatusBadgeComponent, CurrencyCopPipe],
   template: `
     <div class="page-shell">
       <mat-card class="page-card form-card">
@@ -49,23 +47,13 @@ import { selectAllPayments } from '../../store/payments.selectors';
           <ng-container matColumnDef="method"><th mat-header-cell *matHeaderCellDef>Método</th><td mat-cell *matCellDef="let payment">{{ payment.method }}</td></ng-container>
           <ng-container matColumnDef="status"><th mat-header-cell *matHeaderCellDef>Estado</th><td mat-cell *matCellDef="let payment"><ct-status-badge [label]="payment.status" [tone]="payment.status === 'FAILED' ? 'danger' : payment.status === 'PAID' ? 'success' : 'warning'" /></td></ng-container>
           <ng-container matColumnDef="created_at"><th mat-header-cell *matHeaderCellDef>Fecha</th><td mat-cell *matCellDef="let payment">{{ payment.created_at | date: 'short' }}</td></ng-container>
-          <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef></th>
-            <td mat-cell *matCellDef="let payment">
-              <mat-form-field appearance="outline" class="inline-status">
-                <mat-select [value]="payment.status" (valueChange)="updateStatus(payment.id, payment.order_id, $event)">
-                  <mat-option *ngFor="let status of statuses" [value]="status">{{ status }}</mat-option>
-                </mat-select>
-              </mat-form-field>
-            </td>
-          </ng-container>
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
         </table>
       </mat-card>
     </div>
   `,
-  styles: ['.form-card,.table-card{padding:1.5rem}.selector{display:flex;gap:1rem;align-items:center;flex-wrap:wrap}.selector mat-form-field{min-width:280px}.inline-status{width:180px}table{width:100%}'],
+  styles: ['.form-card,.table-card{padding:1.5rem}.selector{display:flex;gap:1rem;align-items:center;flex-wrap:wrap}.selector mat-form-field{min-width:280px}table{width:100%}'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PaymentListComponent implements OnInit {
@@ -87,8 +75,7 @@ export class PaymentListComponent implements OnInit {
       return orderId ? payments.filter((payment) => payment.order_id === orderId) : payments;
     })
   );
-  protected readonly displayedColumns = ['order', 'products', 'amount', 'method', 'status', 'created_at', 'actions'];
-  protected readonly statuses = ['PENDING', 'PAID', 'PARTIAL', 'FAILED', 'REFUNDED'];
+  protected readonly displayedColumns = ['order', 'products', 'amount', 'method', 'status', 'created_at'];
 
   ngOnInit(): void {
     this.store.dispatch(ordersActions.loadOrders());
@@ -107,12 +94,6 @@ export class PaymentListComponent implements OnInit {
     }
 
     this.store.dispatch(paymentsActions.loadPayments());
-  }
-
-  protected updateStatus(id: string, orderId: string, status: 'PENDING' | 'PAID' | 'PARTIAL' | 'FAILED' | 'REFUNDED'): void {
-    if (orderId) {
-      this.store.dispatch(paymentsActions.updatePaymentStatus({ id, orderId, status }));
-    }
   }
 
   protected productNames(payment: Payment): string {

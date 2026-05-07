@@ -21,7 +21,7 @@ export const initialPaymentState: PaymentState = {
 export const paymentsReducer = createReducer(
   initialPaymentState,
   on(paymentsActions.resetPayments, () => initialPaymentState),
-  on(paymentsActions.loadPayments, paymentsActions.loadPaymentsByOrder, paymentsActions.createPayment, paymentsActions.updatePaymentStatus, (state, action) => ({
+  on(paymentsActions.loadPayments, paymentsActions.loadPaymentsByOrder, paymentsActions.createPayment, (state, action) => ({
     ...state,
     selectedOrderId: 'orderId' in action ? action.orderId : state.selectedOrderId,
     loading: true,
