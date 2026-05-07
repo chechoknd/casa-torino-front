@@ -1,4 +1,4 @@
-import { AsyncPipe, DatePipe } from '@angular/common';
+import { AsyncPipe, DatePipe, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -11,6 +11,8 @@ import { map } from 'rxjs';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { EntityToolbarComponent } from '../../../../shared/components/entity-toolbar/entity-toolbar.component';
 import { StatusBadgeComponent } from '../../../../shared/components/status-badge/status-badge.component';
+import { SkeletonLoaderComponent } from '../../../../shared/components/skeleton-loader/skeleton-loader.component';
+import { selectUiLoading } from '../../../../store/ui.selectors';
 import { customersActions } from '../../store/customers.actions';
 import { selectAllCustomers } from '../../store/customers.selectors';
 
@@ -20,12 +22,14 @@ import { selectAllCustomers } from '../../store/customers.selectors';
   imports: [
     AsyncPipe,
     DatePipe,
+    NgIf,
     MatButtonModule,
     MatIconModule,
     MatPaginatorModule,
     MatTableModule,
     EntityToolbarComponent,
-    StatusBadgeComponent
+    StatusBadgeComponent,
+    SkeletonLoaderComponent
   ],
   template: `
     <div class="page-shell">
@@ -37,51 +41,54 @@ import { selectAllCustomers } from '../../store/customers.selectors';
       />
 
       <section class="page-card table-card">
-        <table mat-table [dataSource]="(pagedCustomers$ | async) ?? []">
-          <ng-container matColumnDef="full_name">
-            <th mat-header-cell *matHeaderCellDef>Nombre</th>
-            <td mat-cell *matCellDef="let customer">{{ customer.full_name }}</td>
-          </ng-container>
-          <ng-container matColumnDef="phone">
-            <th mat-header-cell *matHeaderCellDef>Teléfono</th>
-            <td mat-cell *matCellDef="let customer">{{ customer.phone }}</td>
-          </ng-container>
-          <ng-container matColumnDef="customer_type">
-            <th mat-header-cell *matHeaderCellDef>Tipo</th>
-            <td mat-cell *matCellDef="let customer">{{ customer.customer_type }}</td>
-          </ng-container>
-          <ng-container matColumnDef="is_active">
-            <th mat-header-cell *matHeaderCellDef>Estado</th>
-            <td mat-cell *matCellDef="let customer">
-              <ct-status-badge
-                [label]="customer.is_active ? 'Activo' : 'Inactivo'"
-                [tone]="customer.is_active ? 'success' : 'muted'"
-              />
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="created_at">
-            <th mat-header-cell *matHeaderCellDef>Registro</th>
-            <td mat-cell *matCellDef="let customer">{{ customer.created_at | date: 'short' }}</td>
-          </ng-container>
-          <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef></th>
-            <td mat-cell *matCellDef="let customer">
-              <button mat-icon-button (click)="router.navigate(['/customers', customer.id])"><mat-icon>visibility</mat-icon></button>
-              <button mat-icon-button (click)="router.navigate(['/customers/edit', customer.id])"><mat-icon>edit</mat-icon></button>
-              <button mat-icon-button color="warn" (click)="confirmDeactivate(customer.id)"><mat-icon>block</mat-icon></button>
-            </td>
-          </ng-container>
+        <ct-skeleton-loader *ngIf="loading$ | async; else customerTable" [rows]="6" variant="table" />
+        <ng-template #customerTable>
+          <table mat-table [dataSource]="(pagedCustomers$ | async) ?? []">
+            <ng-container matColumnDef="full_name">
+              <th mat-header-cell *matHeaderCellDef>Nombre</th>
+              <td mat-cell *matCellDef="let customer">{{ customer.full_name }}</td>
+            </ng-container>
+            <ng-container matColumnDef="phone">
+              <th mat-header-cell *matHeaderCellDef>Teléfono</th>
+              <td mat-cell *matCellDef="let customer">{{ customer.phone }}</td>
+            </ng-container>
+            <ng-container matColumnDef="customer_type">
+              <th mat-header-cell *matHeaderCellDef>Tipo</th>
+              <td mat-cell *matCellDef="let customer">{{ customer.customer_type }}</td>
+            </ng-container>
+            <ng-container matColumnDef="is_active">
+              <th mat-header-cell *matHeaderCellDef>Estado</th>
+              <td mat-cell *matCellDef="let customer">
+                <ct-status-badge
+                  [label]="customer.is_active ? 'Activo' : 'Inactivo'"
+                  [tone]="customer.is_active ? 'success' : 'muted'"
+                />
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="created_at">
+              <th mat-header-cell *matHeaderCellDef>Registro</th>
+              <td mat-cell *matCellDef="let customer">{{ customer.created_at | date: 'short' }}</td>
+            </ng-container>
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let customer">
+                <button mat-icon-button aria-label="Ver cliente" (click)="router.navigate(['/customers', customer.id])"><mat-icon>visibility</mat-icon></button>
+                <button mat-icon-button aria-label="Editar cliente" (click)="router.navigate(['/customers/edit', customer.id])"><mat-icon>edit</mat-icon></button>
+                <button mat-icon-button aria-label="Desactivar cliente" color="warn" (click)="confirmDeactivate(customer.id)"><mat-icon>block</mat-icon></button>
+              </td>
+            </ng-container>
 
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-        </table>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          </table>
 
-        <mat-paginator
-          [length]="total$ | async"
-          [pageSize]="pageSize"
-          [pageSizeOptions]="[5, 10, 20]"
-          (page)="onPageChange($event)"
-        />
+          <mat-paginator
+            [length]="total$ | async"
+            [pageSize]="pageSize"
+            [pageSizeOptions]="[5, 10, 20]"
+            (page)="onPageChange($event)"
+          />
+        </ng-template>
       </section>
     </div>
   `,
@@ -107,6 +114,7 @@ export class CustomerListComponent implements OnInit {
   protected pageIndex = 0;
   protected pageSize = 10;
   private readonly customers$ = this.store.select(selectAllCustomers);
+  protected readonly loading$ = this.store.select(selectUiLoading);
   protected readonly total$ = this.customers$.pipe(map((customers) => customers.length));
   protected readonly pagedCustomers$ = this.customers$.pipe(
     map((customers) => customers.slice(this.pageIndex * this.pageSize, this.pageIndex * this.pageSize + this.pageSize))

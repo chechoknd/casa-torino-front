@@ -12,22 +12,21 @@ export class StatusBadgeComponent {
 
   get background(): string {
     return {
-      success: '#d6f2d0',
-      warning: '#fde7b5',
-      danger: '#f7d4d0',
-      info: '#d7ecff',
-      muted: '#eadfce'
+      success: '#dcefd2',
+      warning: '#f5dfb8',
+      danger: '#f4d7d1',
+      info: '#d8e8ef',
+      muted: '#ebe2d4'
     }[this.tone];
   }
 
   get color(): string {
     return {
-      success: '#224e1d',
-      warning: '#6d4e00',
-      danger: '#7d2119',
-      info: '#104a78',
-      muted: '#5d4737'
+      success: '#244a17',
+      warning: '#6f4b0f',
+      danger: '#79251f',
+      info: '#1f4c61',
+      muted: '#5d5548'
     }[this.tone];
   }
 }
-

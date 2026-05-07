@@ -18,7 +18,13 @@ import { NavItem } from '../../../core/models/navigation.model';
               <span>Casa Torino</span>
               <small>Panel operativo</small>
             </div>
-            <button mat-icon-button type="button" class="sidebar-toggle" (click)="toggleSidebar()">
+            <button
+              mat-icon-button
+              type="button"
+              class="sidebar-toggle"
+              [attr.aria-label]="sidebarCollapsed ? 'Expandir navegación' : 'Contraer navegación'"
+              (click)="toggleSidebar()"
+            >
               <mat-icon>{{ sidebarCollapsed ? 'chevron_right' : 'chevron_left' }}</mat-icon>
             </button>
           </div>
