@@ -1,4 +1,4 @@
-import { NgFor } from '@angular/common';
+import { CurrencyPipe, NgFor, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -8,18 +8,27 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { Store } from '@ngrx/store';
+import { filter, map, take } from 'rxjs';
+import { selectAllOrders } from '../../../orders/store/orders.selectors';
 import { positiveNumberValidator } from '../../../../shared/validators/positive-number.validator';
 import { paymentsActions } from '../../store/payments.actions';
 
 @Component({
   selector: 'ct-payment-form',
   standalone: true,
-  imports: [NgFor, ReactiveFormsModule, MatButtonModule, MatCardModule, MatFormFieldModule, MatInputModule, MatSelectModule],
+  imports: [CurrencyPipe, NgFor, NgIf, ReactiveFormsModule, MatButtonModule, MatCardModule, MatFormFieldModule, MatInputModule, MatSelectModule],
   template: `
     <mat-card class="page-card form-card">
       <h1>Registrar pago</h1>
       <form [formGroup]="form" (ngSubmit)="submit()">
-        <mat-form-field appearance="outline"><mat-label>Monto</mat-label><input matInput type="number" formControlName="amount" /></mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Monto</mat-label>
+          <input matInput type="number" formControlName="amount" />
+          <mat-hint *ngIf="orderTotal">Máximo: {{ orderTotal | currency:'COP':'symbol-narrow':'1.0-0' }}</mat-hint>
+          <mat-error *ngIf="form.controls.amount.errors?.['max']">El monto no puede superar el total de la factura ({{ orderTotal | currency:'COP':'symbol-narrow':'1.0-0' }}).</mat-error>
+          <mat-error *ngIf="form.controls.amount.errors?.['positiveNumber']">El monto debe ser un valor positivo.</mat-error>
+          <mat-error *ngIf="form.controls.amount.errors?.['required']">El monto es obligatorio.</mat-error>
+        </mat-form-field>
         <mat-form-field appearance="outline">
           <mat-label>Método</mat-label>
           <mat-select formControlName="method">
@@ -48,6 +57,7 @@ export class PaymentFormComponent implements OnInit {
   private readonly store = inject(Store);
   private readonly fb = inject(FormBuilder);
   private orderId = '';
+  protected orderTotal = 0;
   protected readonly methods = ['CASH', 'TRANSFER', 'NEQUI', 'DAVIPLATA', 'CARD', 'OTHER'];
   protected readonly statuses = ['PENDING', 'PAID', 'PARTIAL', 'FAILED', 'REFUNDED'];
 
@@ -59,6 +69,17 @@ export class PaymentFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.orderId = this.route.snapshot.queryParamMap.get('orderId') ?? '';
+    if (this.orderId) {
+      this.store.select(selectAllOrders).pipe(
+        map((orders) => orders.find((o) => o.id === this.orderId)),
+        filter(Boolean),
+        take(1)
+      ).subscribe((order) => {
+        this.orderTotal = order.total;
+        this.form.controls.amount.addValidators(Validators.max(this.orderTotal));
+        this.form.controls.amount.updateValueAndValidity();
+      });
+    }
   }
 
   protected submit(): void {
