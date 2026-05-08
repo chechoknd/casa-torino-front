@@ -23,7 +23,7 @@ import { selectSelectedIngredient } from '../../store/ingredients.selectors';
       <a mat-stroked-button [routerLink]="['/ingredients/edit', ingredient.id]">Editar</a>
     </mat-card>
   `,
-  styles: ['.detail-card{padding:1.5rem}'],
+  styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IngredientDetailComponent implements OnInit {

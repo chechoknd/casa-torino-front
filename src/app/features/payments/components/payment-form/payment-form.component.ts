@@ -48,7 +48,7 @@ import { paymentsActions } from '../../store/payments.actions';
       </form>
     </mat-card>
   `,
-  styles: ['.form-card{max-width:680px;padding:1.5rem}form{display:grid;gap:1rem}.actions{display:flex;justify-content:flex-end;gap:.75rem}'],
+  styles: ['.form-card{max-width:680px}'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PaymentFormComponent implements OnInit {

@@ -65,7 +65,7 @@ import { recipesActions } from '../../store/recipes.actions';
       </form>
     </mat-card>
   `,
-  styles: ['.form-card{padding:1.5rem}.items-header,.item-row,.actions{display:flex;gap:1rem;align-items:center}.item-row{margin-bottom:1rem}.item-row mat-form-field{flex:1}.actions{justify-content:flex-end}'],
+  styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RecipeFormComponent implements OnInit {

@@ -23,7 +23,7 @@ import { selectSelectedProduct } from '../../store/products.selectors';
       <a mat-stroked-button [routerLink]="['/products/edit', product.id]">Editar</a>
     </mat-card>
   `,
-  styles: ['.detail-card{padding:1.5rem}'],
+  styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProductDetailComponent implements OnInit {

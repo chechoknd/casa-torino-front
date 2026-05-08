@@ -38,7 +38,7 @@ import { selectIngredientById } from '../../store/ingredients.selectors';
       </form>
     </mat-card>
   `,
-  styles: ['.form-card{max-width:760px;padding:1.5rem} form{display:grid;gap:1rem}.actions{display:flex;justify-content:flex-end;gap:.75rem}'],
+  styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IngredientFormComponent implements OnInit {

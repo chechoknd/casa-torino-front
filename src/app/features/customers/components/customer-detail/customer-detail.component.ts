@@ -37,25 +37,7 @@ import { ordersActions } from '../../../orders/store/orders.actions';
       </mat-card>
     </div>
   `,
-  styles: [
-    `
-      .detail-card {
-        padding: 1.5rem;
-      }
-
-      .actions {
-        margin-top: 1rem;
-      }
-
-      .history {
-        display: flex;
-        justify-content: space-between;
-        gap: 1rem;
-        padding: 0.9rem 0;
-        border-bottom: 1px solid var(--ct-border);
-      }
-    `
-  ],
+  styles: ['.actions{margin-top:1rem}'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CustomerDetailComponent implements OnInit {

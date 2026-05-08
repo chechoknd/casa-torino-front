@@ -51,7 +51,7 @@ import { selectSelectedOrder } from '../../store/orders.selectors';
       </mat-card>
     </div>
   `,
-  styles: ['.detail-card{padding:1.5rem}.row{display:flex;justify-content:space-between;gap:1rem;padding:.7rem 0;border-bottom:1px solid var(--ct-border)}'],
+  styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrderDetailComponent implements OnInit {

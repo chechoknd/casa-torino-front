@@ -611,12 +611,17 @@ ct-entity-toolbar p {
 }
 
 ct-dashboard .stats-grid {
-  gap: var(--space-5);
+  gap: var(--space-6);
 }
 
 ct-dashboard .stat-card,
 ct-dashboard .latest-card {
-  padding: var(--space-6);
+  padding: var(--space-8);
+}
+
+ct-dashboard .stat-card {
+  display: grid;
+  gap: var(--space-1);
 }
 
 ct-dashboard .stat-card strong {
@@ -624,14 +629,14 @@ ct-dashboard .stat-card strong {
   color: var(--color-text-primary);
   font-family: 'Playfair Display', 'Lora', Georgia, serif;
   font-size: clamp(2rem, 1.5rem + 1.6vw, 3rem);
-  line-height: 1.1;
+  line-height: 1;
 }
 
 ct-dashboard .stat-card span {
   display: block;
-  margin-top: var(--space-2);
   color: var(--color-text-muted);
   font-size: var(--text-sm);
+  font-weight: 500;
 }
 
 ct-dashboard .latest-card h2 {
@@ -640,22 +645,25 @@ ct-dashboard .latest-card h2 {
 
 ct-dashboard .latest-row {
   align-items: center;
-  padding: var(--space-4) 0;
-  transition: background var(--transition-fast), padding var(--transition-fast);
+  padding: var(--space-4) var(--space-3);
+  margin: 0 calc(var(--space-3) * -1);
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-fast), transform var(--transition-fast);
 }
 
 ct-dashboard .latest-row:hover {
-  background: rgba(45, 80, 22, 0.045);
-  padding-inline: var(--space-3);
+  background: rgba(45, 80, 22, 0.04);
+  transform: translateX(4px);
 }
 
 ct-dashboard .latest-row strong {
   color: var(--color-text-primary);
   font-size: var(--text-base);
+  font-weight: 600;
 }
 
 ct-dashboard .latest-row small {
-  margin-top: var(--space-1);
+  margin-top: 0;
   font-size: var(--text-sm);
 }
 
@@ -675,15 +683,37 @@ ct-product-form .form-card,
 ct-ingredient-form .form-card,
 ct-order-form .form-card,
 ct-recipe-form .form-card,
-ct-payment-form .form-card,
+ct-payment-form .form-card {
+  max-width: 800px;
+  padding: var(--space-8);
+}
+
+ct-payment-list .form-card,
+ct-payment-list .table-card {
+  padding: var(--space-8);
+}
+
+ct-customer-form .form-card h1,
+ct-product-form .form-card h1,
+ct-ingredient-form .form-card h1,
+ct-order-form .form-card h1,
+ct-recipe-form .form-card h1,
+ct-payment-form .form-card h1,
+ct-customer-detail .detail-card h1,
+ct-product-detail .detail-card h1,
+ct-ingredient-detail .detail-card h1,
+ct-recipe-detail .detail-card h1,
+ct-order-detail .detail-card h1 {
+  margin-bottom: var(--space-1);
+}
+
 ct-customer-detail .detail-card,
 ct-product-detail .detail-card,
 ct-ingredient-detail .detail-card,
 ct-recipe-detail .detail-card,
-ct-order-detail .detail-card,
-ct-payment-list .form-card,
-ct-payment-list .table-card {
-  padding: var(--space-6);
+ct-order-detail .detail-card {
+  padding: var(--space-8);
+  box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 
 ct-customer-form form,
@@ -693,7 +723,8 @@ ct-order-form form,
 ct-recipe-form form,
 ct-payment-form form {
   display: grid;
-  gap: var(--space-5);
+  gap: var(--space-6);
+  margin-top: var(--space-2);
 }
 
 ct-customer-form .actions,
@@ -711,8 +742,6 @@ ct-customer-detail .actions {
 
 ct-order-form .items-header,
 ct-recipe-form .items-header,
-ct-order-form .item-row,
-ct-recipe-form .item-row,
 ct-payment-list .selector {
   display: flex;
   align-items: center;
@@ -723,6 +752,9 @@ ct-payment-list .selector {
 ct-order-form .items-header,
 ct-recipe-form .items-header {
   justify-content: space-between;
+  margin-top: var(--space-2);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--color-border);
 }
 
 ct-order-form .items,
@@ -733,12 +765,27 @@ ct-recipe-form [formarrayname='items'] {
 
 ct-order-form .item-row,
 ct-recipe-form .item-row {
-  margin-bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  padding: var(--space-4) var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  transition: box-shadow var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast);
+}
+
+ct-order-form .item-row:hover,
+ct-recipe-form .item-row:hover {
+  box-shadow: var(--shadow-xs);
+  border-color: var(--color-border-strong);
+  transform: translateY(-1px);
 }
 
 ct-order-form .item-row mat-form-field,
 ct-recipe-form .item-row mat-form-field {
-  flex: 1 1 220px;
+  flex: 1 1 200px;
 }
 
 ct-customer-list table,
@@ -773,7 +820,15 @@ ct-customer-detail .detail-card,
 ct-recipe-detail .detail-card,
 ct-order-detail .detail-card {
   display: grid;
-  gap: var(--space-4);
+  gap: var(--space-5);
+}
+
+ct-customer-detail .detail-card h1,
+ct-product-detail .detail-card h1,
+ct-ingredient-detail .detail-card h1,
+ct-recipe-detail .detail-card h1,
+ct-order-detail .detail-card h1 {
+  margin-bottom: var(--space-1);
 }
 
 ct-customer-detail .history,
@@ -783,8 +838,39 @@ ct-order-detail .row {
   align-items: center;
   justify-content: space-between;
   gap: var(--space-4);
-  padding: var(--space-4) 0;
+  padding: var(--space-4) var(--space-3);
+  margin: 0 calc(var(--space-3) * -1);
+  border-radius: var(--radius-sm);
   border-bottom: 1px solid var(--color-border);
+  transition: background var(--transition-fast), transform var(--transition-fast), padding var(--transition-fast);
+}
+
+ct-customer-detail .history:hover,
+ct-recipe-detail .row:hover,
+ct-order-detail .row:hover {
+  background: rgba(45, 80, 22, 0.035);
+  transform: translateX(3px);
+  padding-inline: var(--space-4);
+}
+
+ct-customer-detail .history:last-child,
+ct-recipe-detail .row:last-child,
+ct-order-detail .row:last-child {
+  border-bottom: none;
+}
+
+ct-customer-detail .history strong,
+ct-recipe-detail .row strong,
+ct-order-detail .row strong {
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+
+ct-customer-detail .history span,
+ct-recipe-detail .row span,
+ct-order-detail .row span {
+  color: var(--color-text-body);
+  font-size: var(--text-sm);
 }
 
 ct-ingredient-list .low {
