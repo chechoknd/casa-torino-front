@@ -1,14 +1,15 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { NgClass, NgFor, NgIf } from '@angular/common';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { AuthService } from '../../../core/services/auth.service';
 import { NavItem } from '../../../core/models/navigation.model';
 
 @Component({
   selector: 'ct-shell',
   standalone: true,
-  imports: [NgClass, NgFor, NgIf, RouterLink, RouterLinkActive, MatButtonModule, MatIconModule],
+  imports: [NgClass, NgFor, NgIf, RouterLink, RouterLinkActive, RouterOutlet, MatButtonModule, MatIconModule],
   template: `
     <div class="shell" [ngClass]="{ collapsed: sidebarCollapsed }">
       <aside class="sidebar page-card">
@@ -58,12 +59,16 @@ import { NavItem } from '../../../core/models/navigation.model';
             </div>
           </div>
           <div class="topbar-meta">
-            <span>Panel administrativo</span>
-            <small>Diseñado para una operación clara y simétrica</small>
+            <span>{{ auth.user()?.full_name || auth.user()?.username }}</span>
+            <small>{{ auth.user()?.email }}</small>
+            <button mat-button type="button" class="logout-button" (click)="logout()">
+              <mat-icon>logout</mat-icon>
+              Salir
+            </button>
           </div>
         </header>
         <section class="workspace">
-          <ng-content></ng-content>
+          <router-outlet />
         </section>
         <footer class="footer page-card">
           <div>
@@ -199,10 +204,15 @@ import { NavItem } from '../../../core/models/navigation.model';
         display: grid;
         gap: 0.2rem;
         text-align: right;
+        justify-items: end;
       }
 
       .topbar-meta span {
         font-weight: 600;
+      }
+
+      .logout-button {
+        margin-top: 0.25rem;
       }
 
       .footer {
@@ -250,6 +260,8 @@ import { NavItem } from '../../../core/models/navigation.model';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ShellComponent {
+  protected readonly auth = inject(AuthService);
+  private readonly router = inject(Router);
   protected sidebarCollapsed = false;
   protected readonly navItems: NavItem[] = [
     { label: 'Dashboard', route: '/dashboard', icon: 'dashboard' },
@@ -263,5 +275,10 @@ export class ShellComponent {
 
   protected toggleSidebar(): void {
     this.sidebarCollapsed = !this.sidebarCollapsed;
+  }
+
+  protected logout(): void {
+    this.auth.logout();
+    this.router.navigate(['/login']);
   }
 }

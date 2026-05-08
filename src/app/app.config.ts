@@ -8,6 +8,7 @@ import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { appRoutes } from './app.routes';
+import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { loadingInterceptor } from './core/interceptors/loading.interceptor';
 import { customersFeatureKey, customersReducer } from './features/customers/store/customers.reducer';
 import { CustomersEffects } from './features/customers/store/customers.effects';
@@ -27,7 +28,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(appRoutes),
     provideAnimations(),
-    provideHttpClient(withInterceptors([loadingInterceptor])),
+    provideHttpClient(withInterceptors([authInterceptor, loadingInterceptor])),
     provideStore({
       ui: uiReducer,
       [customersFeatureKey]: customersReducer,
