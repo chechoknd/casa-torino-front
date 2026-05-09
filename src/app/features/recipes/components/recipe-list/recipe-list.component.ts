@@ -25,7 +25,7 @@ import { selectAllRecipes } from '../../store/recipes.selectors';
           <ng-container matColumnDef="product_name"><th mat-header-cell *matHeaderCellDef>Producto</th><td mat-cell *matCellDef="let recipe">{{ recipe.product_name ?? 'Sin nombre' }}</td></ng-container>
           <ng-container matColumnDef="servings"><th mat-header-cell *matHeaderCellDef>Porciones</th><td mat-cell *matCellDef="let recipe">{{ recipe.servings }}</td></ng-container>
           <ng-container matColumnDef="cost"><th mat-header-cell *matHeaderCellDef>Costo API</th><td mat-cell *matCellDef="let recipe">{{ recipe.cost ?? 0 | currencyCop }}</td></ng-container>
-          <ng-container matColumnDef="actions"><th mat-header-cell *matHeaderCellDef></th><td mat-cell *matCellDef="let recipe"><button mat-icon-button (click)="router.navigate(['/recipes', recipe.product_id])"><mat-icon>visibility</mat-icon></button></td></ng-container>
+          <ng-container matColumnDef="actions"><th mat-header-cell *matHeaderCellDef></th><td mat-cell *matCellDef="let recipe"><button mat-icon-button aria-label="Ver receta" (click)="router.navigate(['/recipes', recipe.product_id])"><mat-icon>visibility</mat-icon></button></td></ng-container>
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
         </table>
@@ -33,7 +33,7 @@ import { selectAllRecipes } from '../../store/recipes.selectors';
       </section>
     </div>
   `,
-  styles: ['.table-card{padding:.75rem;overflow:hidden}table{width:100%}'],
+  styles: ['.table-card{padding:.75rem;overflow-x:auto;overflow-y:visible}table{width:100%}'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RecipeListComponent implements OnInit {

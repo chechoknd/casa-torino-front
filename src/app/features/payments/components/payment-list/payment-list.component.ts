@@ -58,7 +58,7 @@ import { selectAllPayments } from '../../store/payments.selectors';
       </mat-card>
     </div>
   `,
-  styles: ['.form-card,.table-card{padding:1.5rem}.selector{display:flex;gap:1rem;align-items:center;flex-wrap:wrap}.selector mat-form-field{min-width:280px}table{width:100%}'],
+  styles: ['.form-card,.table-card{padding:1.5rem}.table-card{overflow-x:auto;overflow-y:visible}.selector{display:flex;gap:1rem;align-items:center;flex-wrap:wrap}.selector mat-form-field{min-width:280px}table{width:100%}'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PaymentListComponent implements OnInit {

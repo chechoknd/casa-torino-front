@@ -79,6 +79,7 @@ html {
 html,
 body {
   min-height: 100%;
+  overflow-x: clip;
 }
 
 body {
@@ -92,6 +93,13 @@ body {
   font-size: var(--text-base);
   line-height: 1.5;
   text-rendering: optimizeLegibility;
+}
+
+img,
+svg,
+canvas,
+video {
+  max-width: 100%;
 }
 
 h1,
@@ -137,6 +145,7 @@ small,
 .page-shell {
   display: grid;
   gap: var(--space-6);
+  min-width: 0;
   animation: page-enter var(--transition-base);
 }
 
@@ -353,6 +362,7 @@ a:focus-visible {
 .mat-mdc-cell,
 .mat-mdc-header-cell {
   padding: 16px 18px;
+  vertical-align: middle;
 }
 
 .mat-mdc-row,
@@ -398,10 +408,15 @@ ct-shell .sidebar {
 }
 
 ct-shell .sidebar-toggle,
-ct-shell .topbar-toggle {
+ct-shell .mobile-menu-button {
   color: var(--color-text-inverse);
   border-radius: var(--radius-sm);
   background: rgba(255, 255, 255, 0.08);
+}
+
+ct-shell .mobile-menu-button {
+  color: var(--color-primary);
+  background: rgba(45, 80, 22, 0.08);
 }
 
 ct-shell .sidebar:hover {
@@ -675,7 +690,9 @@ ct-order-list .table-card,
 ct-payment-list .table-card {
   padding: 0;
   overflow-x: auto;
-  overflow-y: hidden;
+  overflow-y: visible;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-color: rgba(45, 80, 22, 0.32) rgba(232, 224, 207, 0.68);
 }
 
 ct-customer-form .form-card,
@@ -797,6 +814,15 @@ ct-payment-list table {
   min-width: 760px;
 }
 
+ct-customer-list td,
+ct-product-list td,
+ct-ingredient-list td,
+ct-recipe-list td,
+ct-order-list td,
+ct-payment-list td {
+  overflow-wrap: anywhere;
+}
+
 ct-payment-list .table-card table {
   min-width: 840px;
 }
@@ -909,22 +935,16 @@ ct-loading-spinner .spinner-backdrop {
 @media (max-width: 768px) {
   ct-shell .shell {
     grid-template-columns: 1fr;
-    gap: var(--space-4);
-    padding: var(--space-4);
+    gap: var(--space-3);
+    padding: var(--space-3);
   }
 
   ct-shell .sidebar {
-    position: static;
-    padding: var(--space-4);
-    height: auto;
-  }
-
-  ct-shell nav {
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    top: 0;
   }
 
   ct-shell .topbar {
-    padding: var(--space-4);
+    padding: var(--space-3);
   }
 
   ct-shell .workspace {
@@ -932,15 +952,46 @@ ct-loading-spinner .spinner-backdrop {
   }
 
   .page-shell {
-    gap: var(--space-6);
+    gap: var(--space-4);
   }
 
   .page-header {
     align-items: stretch;
+    gap: var(--space-4);
+    padding: 0;
+  }
+
+  .page-header > div {
+    min-width: 0;
+  }
+
+  .page-header h1,
+  .page-header p {
+    overflow-wrap: anywhere;
   }
 
   .page-header button {
     width: 100%;
+    min-height: 44px;
+  }
+
+  .page-card:hover {
+    transform: none;
+  }
+
+  .mat-mdc-cell,
+  .mat-mdc-header-cell {
+    padding: 14px 12px;
+  }
+
+  .mat-mdc-paginator {
+    border-top-color: rgba(212, 201, 180, 0.82);
+  }
+
+  .mat-mdc-paginator-container {
+    justify-content: center;
+    gap: var(--space-2);
+    padding: var(--space-2);
   }
 
   ct-payment-list .selector,
@@ -957,5 +1008,117 @@ ct-loading-spinner .spinner-backdrop {
   ct-payment-form .actions {
     flex-direction: column-reverse;
     align-items: stretch;
+  }
+
+  ct-customer-form .form-card,
+  ct-product-form .form-card,
+  ct-ingredient-form .form-card,
+  ct-order-form .form-card,
+  ct-recipe-form .form-card,
+  ct-payment-form .form-card,
+  ct-customer-detail .detail-card,
+  ct-product-detail .detail-card,
+  ct-ingredient-detail .detail-card,
+  ct-recipe-detail .detail-card,
+  ct-order-detail .detail-card,
+  ct-payment-list .form-card,
+  ct-payment-list .table-card,
+  ct-dashboard .stat-card,
+  ct-dashboard .latest-card {
+    padding: var(--space-5);
+  }
+
+  ct-order-form .item-row,
+  ct-recipe-form .item-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--space-3);
+  }
+
+  ct-order-form .item-row mat-form-field,
+  ct-recipe-form .item-row mat-form-field {
+    min-width: 0;
+  }
+
+  ct-order-form .item-row mat-form-field:first-child,
+  ct-recipe-form .item-row mat-form-field:first-child {
+    grid-column: 1 / -1;
+  }
+
+  ct-dashboard .stats-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  ct-dashboard .latest-row,
+  ct-customer-detail .history,
+  ct-recipe-detail .row,
+  ct-order-detail .row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    font-size: var(--text-sm);
+  }
+
+  h1 {
+    font-size: 1.45rem;
+  }
+
+  .page-header {
+    gap: var(--space-3);
+  }
+
+  ct-entity-toolbar h1 {
+    font-size: 1.55rem;
+  }
+
+  ct-entity-toolbar p {
+    font-size: var(--text-base);
+  }
+
+  ct-shell .shell {
+    padding: var(--space-2);
+  }
+
+  ct-shell .topbar strong {
+    font-size: var(--text-md);
+  }
+
+  ct-customer-form .form-card,
+  ct-product-form .form-card,
+  ct-ingredient-form .form-card,
+  ct-order-form .form-card,
+  ct-recipe-form .form-card,
+  ct-payment-form .form-card,
+  ct-customer-detail .detail-card,
+  ct-product-detail .detail-card,
+  ct-ingredient-detail .detail-card,
+  ct-recipe-detail .detail-card,
+  ct-order-detail .detail-card,
+  ct-payment-list .form-card,
+  ct-payment-list .table-card,
+  ct-dashboard .stat-card,
+  ct-dashboard .latest-card {
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+  }
+
+  ct-payment-list .selector mat-form-field {
+    min-width: 0;
+    flex-basis: 100%;
+  }
+
+  ct-order-form .item-row,
+  ct-recipe-form .item-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  ct-order-form .item-row button,
+  ct-recipe-form .item-row button {
+    justify-self: end;
   }
 }

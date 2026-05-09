@@ -95,7 +95,8 @@ import { selectAllCustomers } from '../../store/customers.selectors';
   styles: [
     `
       .table-card {
-        overflow: hidden;
+        overflow-x: auto;
+        overflow-y: visible;
         padding: 0.75rem;
       }
 

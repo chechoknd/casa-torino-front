@@ -63,9 +63,9 @@ import { selectAllProducts } from '../../store/products.selectors';
           <ng-container matColumnDef="actions">
             <th mat-header-cell *matHeaderCellDef></th>
             <td mat-cell *matCellDef="let product">
-              <button mat-icon-button (click)="router.navigate(['/products', product.id])"><mat-icon>visibility</mat-icon></button>
-              <button mat-icon-button (click)="router.navigate(['/products/edit', product.id])"><mat-icon>edit</mat-icon></button>
-              <button mat-icon-button color="warn" (click)="confirmDeactivate(product.id)"><mat-icon>block</mat-icon></button>
+              <button mat-icon-button aria-label="Ver producto" (click)="router.navigate(['/products', product.id])"><mat-icon>visibility</mat-icon></button>
+              <button mat-icon-button aria-label="Editar producto" (click)="router.navigate(['/products/edit', product.id])"><mat-icon>edit</mat-icon></button>
+              <button mat-icon-button aria-label="Desactivar producto" color="warn" (click)="confirmDeactivate(product.id)"><mat-icon>block</mat-icon></button>
             </td>
           </ng-container>
 
@@ -76,7 +76,7 @@ import { selectAllProducts } from '../../store/products.selectors';
       </section>
     </div>
   `,
-  styles: ['.table-card{padding:0.75rem;overflow:hidden} table{width:100%}'],
+  styles: ['.table-card{padding:0.75rem;overflow-x:auto;overflow-y:visible} table{width:100%}'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProductListComponent implements OnInit {

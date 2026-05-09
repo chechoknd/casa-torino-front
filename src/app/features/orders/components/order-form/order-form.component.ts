@@ -47,7 +47,7 @@ import { ordersActions } from '../../store/orders.actions';
               </mat-select>
             </mat-form-field>
             <mat-form-field appearance="outline"><mat-label>Cantidad</mat-label><input matInput type="number" formControlName="quantity" /></mat-form-field>
-            <button mat-icon-button color="warn" type="button" (click)="removeItem(i)"><mat-icon>delete</mat-icon></button>
+            <button mat-icon-button color="warn" type="button" aria-label="Eliminar producto" (click)="removeItem(i)"><mat-icon>delete</mat-icon></button>
           </div>
         </div>
 

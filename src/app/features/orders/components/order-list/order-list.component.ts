@@ -42,7 +42,7 @@ import { selectAllOrders } from '../../store/orders.selectors';
       </section>
     </div>
   `,
-  styles: ['.table-card{padding:.75rem;overflow:hidden}table{width:100%}'],
+  styles: ['.table-card{padding:.75rem;overflow-x:auto;overflow-y:visible}table{width:100%}'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrderListComponent implements OnInit {

@@ -54,7 +54,7 @@ import { recipesActions } from '../../store/recipes.actions';
                 <mat-option *ngFor="let option of units" [value]="option">{{ option }}</mat-option>
               </mat-select>
             </mat-form-field>
-            <button mat-icon-button color="warn" type="button" (click)="removeItem(i)"><mat-icon>delete</mat-icon></button>
+            <button mat-icon-button color="warn" type="button" aria-label="Eliminar ingrediente" (click)="removeItem(i)"><mat-icon>delete</mat-icon></button>
           </div>
         </div>
 

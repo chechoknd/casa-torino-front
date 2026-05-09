@@ -11,11 +11,13 @@ import { NavItem } from '../../../core/models/navigation.model';
   standalone: true,
   imports: [NgClass, NgFor, NgIf, RouterLink, RouterLinkActive, RouterOutlet, MatButtonModule, MatIconModule],
   template: `
-    <div class="shell" [ngClass]="{ collapsed: sidebarCollapsed }">
-      <aside class="sidebar page-card">
+    <div class="shell" [ngClass]="{ collapsed: sidebarCollapsed, 'mobile-menu-open': mobileMenuOpen }">
+      <div class="mobile-backdrop" *ngIf="mobileMenuOpen" (click)="closeMobileMenu()" aria-hidden="true"></div>
+
+      <aside class="sidebar page-card" aria-label="Navegación principal">
         <div class="sidebar-inner">
           <div class="brand">
-            <div class="brand-copy" *ngIf="!sidebarCollapsed">
+            <div class="brand-copy" *ngIf="!sidebarCollapsed || mobileMenuOpen">
               <span>Casa Torino</span>
               <small>Panel operativo</small>
             </div>
@@ -37,13 +39,14 @@ import { NavItem } from '../../../core/models/navigation.model';
               routerLinkActive="active"
               class="nav-link"
               [attr.aria-label]="item.label"
+              (click)="closeMobileMenu()"
             >
               <mat-icon>{{ item.icon }}</mat-icon>
-              <span *ngIf="!sidebarCollapsed">{{ item.label }}</span>
+              <span *ngIf="!sidebarCollapsed || mobileMenuOpen">{{ item.label }}</span>
             </a>
           </nav>
 
-          <div class="sidebar-footer" *ngIf="!sidebarCollapsed">
+          <div class="sidebar-footer" *ngIf="!sidebarCollapsed || mobileMenuOpen">
             <strong>Soluciones Gastronómicas</strong>
             <small>Operación centralizada de clientes, cocina, pedidos y pagos.</small>
           </div>
@@ -53,6 +56,15 @@ import { NavItem } from '../../../core/models/navigation.model';
       <main class="content">
         <header class="topbar page-card">
           <div class="topbar-leading">
+            <button
+              mat-icon-button
+              type="button"
+              class="mobile-menu-button"
+              aria-label="Abrir navegación"
+              (click)="openMobileMenu()"
+            >
+              <mat-icon>menu</mat-icon>
+            </button>
             <div class="topbar-copy">
               <strong>Casa Torino</strong>
               <p>Administración de clientes, cocina, pedidos y pagos</p>
@@ -101,6 +113,7 @@ import { NavItem } from '../../../core/models/navigation.model';
         top: 1rem;
         align-self: stretch;
         height: calc(100dvh - 2rem);
+        z-index: 20;
       }
 
       .sidebar-inner {
@@ -111,8 +124,16 @@ import { NavItem } from '../../../core/models/navigation.model';
       }
 
       .sidebar-toggle,
-      .topbar-toggle {
+      .mobile-menu-button {
         flex: 0 0 auto;
+      }
+
+      .mobile-menu-button {
+        display: none;
+      }
+
+      .mobile-backdrop {
+        display: none;
       }
 
       .sidebar-footer {
@@ -235,6 +256,8 @@ import { NavItem } from '../../../core/models/navigation.model';
       @media (max-width: 980px) {
         .shell {
           grid-template-columns: 1fr;
+          padding: 0.75rem;
+          gap: 0.75rem;
         }
 
         .shell.collapsed {
@@ -242,17 +265,109 @@ import { NavItem } from '../../../core/models/navigation.model';
         }
 
         .sidebar {
-          position: static;
-          height: auto;
+          position: fixed;
+          inset: 0 auto 0 0;
+          width: min(84vw, 320px);
+          height: 100dvh;
+          border-radius: 0 var(--radius-xl) var(--radius-xl) 0;
+          transform: translateX(-105%);
+          transition: transform var(--transition-base);
+          box-shadow: var(--shadow-lg);
+          overflow-y: auto;
+        }
+
+        .mobile-menu-open .sidebar {
+          transform: translateX(0);
+        }
+
+        .mobile-backdrop {
+          display: block;
+          position: fixed;
+          inset: 0;
+          z-index: 15;
+          background: rgba(16, 29, 9, 0.46);
+          backdrop-filter: blur(2px);
+        }
+
+        .sidebar-toggle {
+          display: none;
+        }
+
+        .mobile-menu-button {
+          display: inline-flex;
         }
 
         nav {
-          grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+          grid-template-columns: 1fr;
+        }
+
+        .brand {
+          align-items: center;
+        }
+
+        .brand-copy {
+          display: grid;
         }
 
         .topbar-meta,
         .footer {
           text-align: left;
+        }
+
+        .topbar {
+          align-items: flex-start;
+          padding: 0.85rem;
+        }
+
+        .topbar-copy p {
+          display: none;
+        }
+
+        .topbar-meta {
+          width: 100%;
+          justify-items: stretch;
+        }
+
+        .logout-button {
+          justify-content: center;
+          min-height: 42px;
+        }
+
+        .content {
+          gap: 0.75rem;
+          min-height: calc(100dvh - 1.5rem);
+        }
+
+        .footer {
+          padding: 0.85rem;
+        }
+      }
+
+      @media (max-width: 560px) {
+        .shell {
+          padding: 0.5rem;
+        }
+
+        .topbar {
+          gap: 0.75rem;
+        }
+
+        .topbar-leading {
+          width: 100%;
+        }
+
+        .topbar-copy {
+          min-width: 0;
+        }
+
+        .topbar-copy strong,
+        .topbar-meta span,
+        .topbar-meta small {
+          overflow-wrap: anywhere;
+        }
+
+        .footer {
+          display: none;
         }
       }
     `
@@ -263,6 +378,7 @@ export class ShellComponent {
   protected readonly auth = inject(AuthService);
   private readonly router = inject(Router);
   protected sidebarCollapsed = false;
+  protected mobileMenuOpen = false;
   protected readonly navItems: NavItem[] = [
     { label: 'Dashboard', route: '/dashboard', icon: 'dashboard' },
     { label: 'Clientes', route: '/customers', icon: 'groups' },
@@ -277,7 +393,16 @@ export class ShellComponent {
     this.sidebarCollapsed = !this.sidebarCollapsed;
   }
 
+  protected openMobileMenu(): void {
+    this.mobileMenuOpen = true;
+  }
+
+  protected closeMobileMenu(): void {
+    this.mobileMenuOpen = false;
+  }
+
   protected logout(): void {
+    this.closeMobileMenu();
     this.auth.logout();
     this.router.navigate(['/login']);
   }

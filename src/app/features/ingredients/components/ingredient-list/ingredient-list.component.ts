@@ -39,9 +39,9 @@ import { selectAllIngredients } from '../../store/ingredients.selectors';
           <ng-container matColumnDef="actions">
             <th mat-header-cell *matHeaderCellDef></th>
             <td mat-cell *matCellDef="let ingredient">
-              <button mat-icon-button (click)="router.navigate(['/ingredients', ingredient.id])"><mat-icon>visibility</mat-icon></button>
-              <button mat-icon-button (click)="router.navigate(['/ingredients/edit', ingredient.id])"><mat-icon>edit</mat-icon></button>
-              <button mat-icon-button color="warn" (click)="confirmDeactivate(ingredient.id)"><mat-icon>block</mat-icon></button>
+              <button mat-icon-button aria-label="Ver ingrediente" (click)="router.navigate(['/ingredients', ingredient.id])"><mat-icon>visibility</mat-icon></button>
+              <button mat-icon-button aria-label="Editar ingrediente" (click)="router.navigate(['/ingredients/edit', ingredient.id])"><mat-icon>edit</mat-icon></button>
+              <button mat-icon-button aria-label="Desactivar ingrediente" color="warn" (click)="confirmDeactivate(ingredient.id)"><mat-icon>block</mat-icon></button>
             </td>
           </ng-container>
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -51,7 +51,7 @@ import { selectAllIngredients } from '../../store/ingredients.selectors';
       </section>
     </div>
   `,
-  styles: ['.table-card{padding:.75rem;overflow:hidden}table{width:100%}.low{color:var(--ct-danger);font-weight:700}'],
+  styles: ['.table-card{padding:.75rem;overflow-x:auto;overflow-y:visible}table{width:100%}.low{color:var(--ct-danger);font-weight:700}'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IngredientListComponent implements OnInit {
