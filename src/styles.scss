@@ -812,15 +812,23 @@ ct-recipe-list table,
 ct-order-list table,
 ct-payment-list table {
   min-width: 760px;
+  table-layout: auto;
 }
 
+ct-customer-list th,
 ct-customer-list td,
+ct-product-list th,
 ct-product-list td,
+ct-ingredient-list th,
 ct-ingredient-list td,
+ct-recipe-list th,
 ct-recipe-list td,
+ct-order-list th,
 ct-order-list td,
+ct-payment-list th,
 ct-payment-list td {
-  overflow-wrap: anywhere;
+  white-space: nowrap;
+  word-break: normal;
 }
 
 ct-payment-list .table-card table {

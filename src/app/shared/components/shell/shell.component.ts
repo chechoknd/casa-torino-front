@@ -71,12 +71,13 @@ import { NavItem } from '../../../core/models/navigation.model';
             </div>
           </div>
           <div class="topbar-meta">
-            <span>{{ auth.user()?.full_name || auth.user()?.username }}</span>
-            <small>{{ auth.user()?.email }}</small>
-            <button mat-button type="button" class="logout-button" (click)="logout()">
+            <span class="desktop-user-name">{{ auth.user()?.full_name || auth.user()?.username }}</span>
+            <small class="desktop-user-email">{{ auth.user()?.email }}</small>
+            <button mat-button type="button" class="logout-button" aria-label="Cerrar sesión" (click)="logout()">
               <mat-icon>logout</mat-icon>
-              Salir
+              <span class="logout-text">Salir</span>
             </button>
+            <span class="mobile-user-initial" aria-label="Inicial del usuario">{{ userInitial }}</span>
           </div>
         </header>
         <section class="workspace">
@@ -236,6 +237,10 @@ import { NavItem } from '../../../core/models/navigation.model';
         margin-top: 0.25rem;
       }
 
+      .mobile-user-initial {
+        display: none;
+      }
+
       .footer {
         display: flex;
         align-items: center;
@@ -316,7 +321,13 @@ import { NavItem } from '../../../core/models/navigation.model';
 
         .topbar {
           align-items: flex-start;
+          flex-wrap: nowrap;
           padding: 0.85rem;
+        }
+
+        .topbar-leading {
+          flex: 1 1 auto;
+          min-width: 0;
         }
 
         .topbar-copy p {
@@ -324,13 +335,39 @@ import { NavItem } from '../../../core/models/navigation.model';
         }
 
         .topbar-meta {
-          width: 100%;
-          justify-items: stretch;
+          align-self: flex-start;
+          gap: 0.2rem;
+          justify-items: center;
+          min-width: 44px;
+          text-align: center;
+        }
+
+        .desktop-user-name,
+        .desktop-user-email,
+        .logout-text {
+          display: none;
+        }
+
+        .mobile-user-initial {
+          display: inline-grid;
+          place-items: center;
+          width: 28px;
+          height: 28px;
+          color: var(--color-primary);
+          background: var(--color-primary-muted);
+          border: 1px solid rgba(45, 80, 22, 0.16);
+          border-radius: 999px;
+          font-size: 0.82rem;
+          font-weight: 800;
+          line-height: 1;
         }
 
         .logout-button {
-          justify-content: center;
-          min-height: 42px;
+          min-width: 44px;
+          width: 44px;
+          height: 44px;
+          margin-top: 0;
+          padding: 0;
         }
 
         .content {
@@ -353,7 +390,7 @@ import { NavItem } from '../../../core/models/navigation.model';
         }
 
         .topbar-leading {
-          width: 100%;
+          width: auto;
         }
 
         .topbar-copy {
@@ -361,8 +398,8 @@ import { NavItem } from '../../../core/models/navigation.model';
         }
 
         .topbar-copy strong,
-        .topbar-meta span,
-        .topbar-meta small {
+        .desktop-user-name,
+        .desktop-user-email {
           overflow-wrap: anywhere;
         }
 
@@ -395,6 +432,12 @@ export class ShellComponent {
 
   protected openMobileMenu(): void {
     this.mobileMenuOpen = true;
+  }
+
+  protected get userInitial(): string {
+    const user = this.auth.user();
+    const displayName = user?.full_name || user?.username || user?.email || 'U';
+    return displayName.trim().charAt(0).toUpperCase();
   }
 
   protected closeMobileMenu(): void {
