@@ -77,7 +77,21 @@ import { NavItem } from '../../../core/models/navigation.model';
               <mat-icon>logout</mat-icon>
               <span class="logout-text">Salir</span>
             </button>
-            <span class="mobile-user-initial" aria-label="Inicial del usuario">{{ userInitial }}</span>
+            <button
+              type="button"
+              class="mobile-user-initial"
+              aria-label="Abrir opciones de usuario"
+              [attr.aria-expanded]="mobileUserMenuOpen"
+              (click)="toggleMobileUserMenu()"
+            >
+              {{ userInitial }}
+            </button>
+            <div class="mobile-user-menu page-card" *ngIf="mobileUserMenuOpen">
+              <button type="button" class="mobile-logout-option" (click)="logout()">
+                <mat-icon>logout</mat-icon>
+                Salir
+              </button>
+            </div>
           </div>
         </header>
         <section class="workspace">
@@ -210,6 +224,9 @@ import { NavItem } from '../../../core/models/navigation.model';
         justify-content: space-between;
         gap: 1rem;
         flex-wrap: wrap;
+        overflow: visible;
+        position: relative;
+        z-index: 10;
       }
 
       .topbar-leading {
@@ -225,6 +242,7 @@ import { NavItem } from '../../../core/models/navigation.model';
       .topbar-meta {
         display: grid;
         gap: 0.2rem;
+        position: relative;
         text-align: right;
         justify-items: end;
       }
@@ -238,6 +256,10 @@ import { NavItem } from '../../../core/models/navigation.model';
       }
 
       .mobile-user-initial {
+        display: none;
+      }
+
+      .mobile-user-menu {
         display: none;
       }
 
@@ -344,7 +366,7 @@ import { NavItem } from '../../../core/models/navigation.model';
 
         .desktop-user-name,
         .desktop-user-email,
-        .logout-text {
+        .logout-button {
           display: none;
         }
 
@@ -360,14 +382,38 @@ import { NavItem } from '../../../core/models/navigation.model';
           font-size: 0.82rem;
           font-weight: 800;
           line-height: 1;
+          cursor: pointer;
         }
 
-        .logout-button {
-          min-width: 44px;
-          width: 44px;
-          height: 44px;
-          margin-top: 0;
-          padding: 0;
+        .mobile-user-menu {
+          display: block;
+          position: absolute;
+          top: calc(100% + 0.5rem);
+          right: 0;
+          z-index: 40;
+          min-width: 132px;
+          padding: 0.35rem;
+          text-align: left;
+        }
+
+        .mobile-logout-option {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          width: 100%;
+          min-height: 40px;
+          padding: 0.55rem 0.75rem;
+          color: var(--color-primary);
+          background: transparent;
+          border: 0;
+          border-radius: var(--radius-sm);
+          cursor: pointer;
+          font-weight: 700;
+        }
+
+        .mobile-logout-option:hover,
+        .mobile-logout-option:focus-visible {
+          background: rgba(45, 80, 22, 0.08);
         }
 
         .content {
@@ -416,6 +462,7 @@ export class ShellComponent {
   private readonly router = inject(Router);
   protected sidebarCollapsed = false;
   protected mobileMenuOpen = false;
+  protected mobileUserMenuOpen = false;
   protected readonly navItems: NavItem[] = [
     { label: 'Dashboard', route: '/dashboard', icon: 'dashboard' },
     { label: 'Clientes', route: '/customers', icon: 'groups' },
@@ -432,6 +479,7 @@ export class ShellComponent {
 
   protected openMobileMenu(): void {
     this.mobileMenuOpen = true;
+    this.mobileUserMenuOpen = false;
   }
 
   protected get userInitial(): string {
@@ -444,8 +492,13 @@ export class ShellComponent {
     this.mobileMenuOpen = false;
   }
 
+  protected toggleMobileUserMenu(): void {
+    this.mobileUserMenuOpen = !this.mobileUserMenuOpen;
+  }
+
   protected logout(): void {
     this.closeMobileMenu();
+    this.mobileUserMenuOpen = false;
     this.auth.logout();
     this.router.navigate(['/login']);
   }
