@@ -66,7 +66,10 @@ import { NavItem } from '../../../core/models/navigation.model';
               <mat-icon>menu</mat-icon>
             </button>
             <div class="topbar-copy">
-              <strong>Casa Torino</strong>
+              <div class="topbar-brand-row">
+                <strong>Casa Torino</strong>
+                <img src="/assets/images/casa_torino_logo.ico" alt="" class="topbar-brand-icon" />
+              </div>
               <p>Administración de clientes, cocina, pedidos y pagos</p>
             </div>
           </div>
@@ -94,9 +97,11 @@ import { NavItem } from '../../../core/models/navigation.model';
             </div>
           </div>
         </header>
+
         <section class="workspace">
           <router-outlet />
         </section>
+
         <footer class="footer page-card">
           <div>
             <strong>Casa Torino</strong>
@@ -218,9 +223,9 @@ import { NavItem } from '../../../core/models/navigation.model';
       }
 
       .topbar {
-        padding: 1rem 1.25rem;
+        padding: 1rem 1.25rem 0.95rem;
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         justify-content: space-between;
         gap: 1rem;
         flex-wrap: wrap;
@@ -231,28 +236,59 @@ import { NavItem } from '../../../core/models/navigation.model';
 
       .topbar-leading {
         display: flex;
+        align-items: flex-start;
+        gap: 0.8rem;
+        flex: 1 1 auto;
+        min-width: 0;
+        padding-top: 0.1rem;
+      }
+
+      .topbar-copy {
+        display: grid;
+        gap: 0.15rem;
+        min-width: 0;
+      }
+
+      .topbar-brand-row {
+        display: flex;
         align-items: center;
-        gap: 0.75rem;
+        gap: 0.45rem;
+        min-width: 0;
+      }
+
+      .topbar-copy strong {
+        line-height: 1.1;
+      }
+
+      .topbar-brand-icon {
+        width: 24px;
+        height: 24px;
+        flex: 0 0 auto;
+        object-fit: contain;
       }
 
       .topbar p {
-        margin: 0.35rem 0 0;
+        margin: 0;
+        line-height: 1.35;
       }
 
       .topbar-meta {
         display: grid;
-        gap: 0.2rem;
+        gap: 0.15rem;
         position: relative;
         text-align: right;
         justify-items: end;
+        align-self: flex-start;
+        padding-top: 0.1rem;
       }
 
       .topbar-meta span {
         font-weight: 600;
+        line-height: 1.15;
       }
 
       .logout-button {
-        margin-top: 0.25rem;
+        margin-top: 0.15rem;
       }
 
       .mobile-user-initial {
@@ -342,26 +378,29 @@ import { NavItem } from '../../../core/models/navigation.model';
         }
 
         .topbar {
-          align-items: flex-start;
           flex-wrap: nowrap;
           padding: 0.85rem;
         }
 
         .topbar-leading {
-          flex: 1 1 auto;
-          min-width: 0;
+          padding-top: 0;
         }
 
         .topbar-copy p {
           display: none;
         }
 
+        .topbar-brand-icon {
+          width: 20px;
+          height: 20px;
+        }
+
         .topbar-meta {
-          align-self: flex-start;
-          gap: 0.2rem;
+          gap: 0.15rem;
           justify-items: center;
           min-width: 44px;
           text-align: center;
+          padding-top: 0;
         }
 
         .desktop-user-name,

@@ -1,6 +1,10 @@
 @use '@angular/material' as mat;
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap');
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 html {
   color-scheme: light;
   @include mat.theme((
