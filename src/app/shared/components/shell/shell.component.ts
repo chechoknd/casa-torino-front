@@ -1,18 +1,43 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { NgClass, NgFor, NgIf } from '@angular/common';
-import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { AuthService } from '../../../core/services/auth.service';
-import { NavItem } from '../../../core/models/navigation.model';
+import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
+import { NgClass, NgFor, NgIf } from "@angular/common";
+import {
+  Router,
+  RouterLink,
+  RouterLinkActive,
+  RouterOutlet,
+} from "@angular/router";
+import { MatButtonModule } from "@angular/material/button";
+import { MatIconModule } from "@angular/material/icon";
+import { AuthService } from "../../../core/services/auth.service";
+import { NavItem } from "../../../core/models/navigation.model";
 
 @Component({
-  selector: 'ct-shell',
+  selector: "ct-shell",
   standalone: true,
-  imports: [NgClass, NgFor, NgIf, RouterLink, RouterLinkActive, RouterOutlet, MatButtonModule, MatIconModule],
+  imports: [
+    NgClass,
+    NgFor,
+    NgIf,
+    RouterLink,
+    RouterLinkActive,
+    RouterOutlet,
+    MatButtonModule,
+    MatIconModule,
+  ],
   template: `
-    <div class="shell" [ngClass]="{ collapsed: sidebarCollapsed, 'mobile-menu-open': mobileMenuOpen }">
-      <div class="mobile-backdrop" *ngIf="mobileMenuOpen" (click)="closeMobileMenu()" aria-hidden="true"></div>
+    <div
+      class="shell"
+      [ngClass]="{
+        collapsed: sidebarCollapsed,
+        'mobile-menu-open': mobileMenuOpen,
+      }"
+    >
+      <div
+        class="mobile-backdrop"
+        *ngIf="mobileMenuOpen"
+        (click)="closeMobileMenu()"
+        aria-hidden="true"
+      ></div>
 
       <aside class="sidebar page-card" aria-label="Navegación principal">
         <div class="sidebar-inner">
@@ -25,10 +50,14 @@ import { NavItem } from '../../../core/models/navigation.model';
               mat-icon-button
               type="button"
               class="sidebar-toggle"
-              [attr.aria-label]="sidebarCollapsed ? 'Expandir navegación' : 'Contraer navegación'"
+              [attr.aria-label]="
+                sidebarCollapsed ? 'Expandir navegación' : 'Contraer navegación'
+              "
               (click)="toggleSidebar()"
             >
-              <mat-icon>{{ sidebarCollapsed ? 'chevron_right' : 'chevron_left' }}</mat-icon>
+              <mat-icon>{{
+                sidebarCollapsed ? "chevron_right" : "chevron_left"
+              }}</mat-icon>
             </button>
           </div>
 
@@ -42,13 +71,21 @@ import { NavItem } from '../../../core/models/navigation.model';
               (click)="closeMobileMenu()"
             >
               <mat-icon>{{ item.icon }}</mat-icon>
-              <span *ngIf="!sidebarCollapsed || mobileMenuOpen">{{ item.label }}</span>
+              <span *ngIf="!sidebarCollapsed || mobileMenuOpen">{{
+                item.label
+              }}</span>
             </a>
           </nav>
 
-          <div class="sidebar-footer" *ngIf="!sidebarCollapsed || mobileMenuOpen">
+          <div
+            class="sidebar-footer"
+            *ngIf="!sidebarCollapsed || mobileMenuOpen"
+          >
             <strong>Soluciones Gastronómicas</strong>
-            <small>Operación centralizada de clientes, cocina, pedidos y pagos.</small>
+            <small
+              >Operación centralizada de clientes, cocina, pedidos y
+              pagos.</small
+            >
           </div>
         </div>
       </aside>
@@ -68,15 +105,23 @@ import { NavItem } from '../../../core/models/navigation.model';
             <div class="topbar-copy">
               <div class="topbar-brand-row">
                 <strong>Casa Torino</strong>
-                <img src="/assets/images/casa_torino_logo.ico" alt="" class="topbar-brand-icon" />
+                <mat-icon class="topbar-brand-icon">cottage</mat-icon>
               </div>
               <p>Administración de clientes, cocina, pedidos y pagos</p>
             </div>
           </div>
           <div class="topbar-meta">
-            <span class="desktop-user-name">{{ auth.user()?.full_name || auth.user()?.username }}</span>
+            <span class="desktop-user-name">{{
+              auth.user()?.full_name || auth.user()?.username
+            }}</span>
             <small class="desktop-user-email">{{ auth.user()?.email }}</small>
-            <button mat-button type="button" class="logout-button" aria-label="Cerrar sesión" (click)="logout()">
+            <button
+              mat-button
+              type="button"
+              class="logout-button"
+              aria-label="Cerrar sesión"
+              (click)="logout()"
+            >
               <mat-icon>logout</mat-icon>
               <span class="logout-text">Salir</span>
             </button>
@@ -90,7 +135,11 @@ import { NavItem } from '../../../core/models/navigation.model';
               {{ userInitial }}
             </button>
             <div class="mobile-user-menu page-card" *ngIf="mobileUserMenuOpen">
-              <button type="button" class="mobile-logout-option" (click)="logout()">
+              <button
+                type="button"
+                class="mobile-logout-option"
+                (click)="logout()"
+              >
                 <mat-icon>logout</mat-icon>
                 Salir
               </button>
@@ -105,7 +154,10 @@ import { NavItem } from '../../../core/models/navigation.model';
         <footer class="footer page-card">
           <div>
             <strong>Casa Torino</strong>
-            <p>Soluciones gastronómicas para almuerzos, eventos, planes y catering.</p>
+            <p>
+              Soluciones gastronómicas para almuerzos, eventos, planes y
+              catering.
+            </p>
           </div>
           <small>Frontend operativo conectado con la API FastAPI.</small>
         </footer>
@@ -261,10 +313,11 @@ import { NavItem } from '../../../core/models/navigation.model';
       }
 
       .topbar-brand-icon {
+        font-size: 24px;
         width: 24px;
         height: 24px;
         flex: 0 0 auto;
-        object-fit: contain;
+        line-height: 24px;
       }
 
       .topbar p {
@@ -391,8 +444,10 @@ import { NavItem } from '../../../core/models/navigation.model';
         }
 
         .topbar-brand-icon {
+          font-size: 20px;
           width: 20px;
           height: 20px;
+          line-height: 20px;
         }
 
         .topbar-meta {
@@ -492,9 +547,9 @@ import { NavItem } from '../../../core/models/navigation.model';
           display: none;
         }
       }
-    `
+    `,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShellComponent {
   protected readonly auth = inject(AuthService);
@@ -503,13 +558,13 @@ export class ShellComponent {
   protected mobileMenuOpen = false;
   protected mobileUserMenuOpen = false;
   protected readonly navItems: NavItem[] = [
-    { label: 'Dashboard', route: '/dashboard', icon: 'dashboard' },
-    { label: 'Clientes', route: '/customers', icon: 'groups' },
-    { label: 'Productos', route: '/products', icon: 'lunch_dining' },
-    { label: 'Ingredientes', route: '/ingredients', icon: 'inventory_2' },
-    { label: 'Recetas', route: '/recipes', icon: 'menu_book' },
-    { label: 'Pedidos', route: '/orders', icon: 'receipt_long' },
-    { label: 'Pagos', route: '/payments', icon: 'payments' }
+    { label: "Dashboard", route: "/dashboard", icon: "dashboard" },
+    { label: "Clientes", route: "/customers", icon: "groups" },
+    { label: "Productos", route: "/products", icon: "lunch_dining" },
+    { label: "Ingredientes", route: "/ingredients", icon: "inventory_2" },
+    { label: "Recetas", route: "/recipes", icon: "menu_book" },
+    { label: "Pedidos", route: "/orders", icon: "receipt_long" },
+    { label: "Pagos", route: "/payments", icon: "payments" },
   ];
 
   protected toggleSidebar(): void {
@@ -523,7 +578,7 @@ export class ShellComponent {
 
   protected get userInitial(): string {
     const user = this.auth.user();
-    const displayName = user?.full_name || user?.username || user?.email || 'U';
+    const displayName = user?.full_name || user?.username || user?.email || "U";
     return displayName.trim().charAt(0).toUpperCase();
   }
 
@@ -539,6 +594,6 @@ export class ShellComponent {
     this.closeMobileMenu();
     this.mobileUserMenuOpen = false;
     this.auth.logout();
-    this.router.navigate(['/login']);
+    this.router.navigate(["/login"]);
   }
 }
