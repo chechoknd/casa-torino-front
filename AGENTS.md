@@ -44,13 +44,14 @@ Este proyecto es una aplicación Angular. Actúa como desarrollador frontend sen
 
 ## Estilos
 
+- **OFFICIAL SOURCE OF TRUTH:** Always refer to `/colors-and-guidelines.md` for all visual rules, colors, spacing, and typography.
 - Respetar estilos existentes del proyecto.
 - No romper responsive.
 - Evitar `!important` salvo necesidad real.
 - Validar pantallas pequeñas.
 - Evitar overflow horizontal.
 - Cuidar textos largos, especialmente en varios idiomas.
-- No cambiar diseño visual más allá del alcance solicitado.
+- **NO MODERNIZATION REFACTORS:** No cambiar diseño visual más allá del alcance solicitado ni realizar refactors de UI automáticos.
 
 ## Servicios y APIs
 

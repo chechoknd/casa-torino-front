@@ -7,8 +7,9 @@ La aplicación actualmente funciona correctamente en desktop, pero necesita una 
 
 ## Identidad visual obligatoria
 
-Mantener la identidad actual:
+**OFFICIAL SOURCE OF TRUTH:** Always refer to `/colors-and-guidelines.md` for all colors, spacing, typography, and component styling.
 
+Mantener la identidad actual:
 * Backgrounds beige / cream
 * Verde militar como color principal
 * Diseño elegante, limpio y premium tipo SaaS moderno

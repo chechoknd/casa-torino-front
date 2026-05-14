@@ -2,7 +2,9 @@
 
 ## Objetivo visual
 
-Modernizar el CRM hacia una experiencia SaaS premium sin abandonar la identidad actual de Casa Torino:
+Modernizar el CRM hacia una experiencia SaaS premium sin abandonar la identidad actual de Casa Torino.
+
+**Refer to `/colors-and-guidelines.md` for the complete visual system (Colors, Spacing, Typography).**
 
 - Verde militar como color principal.
 - Fondos beige/cream cálidos.

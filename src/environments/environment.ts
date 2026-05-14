@@ -1,4 +1,4 @@
 export const environment = {
-  production: true,
-  apiUrl: 'https://casa-torino-back-go.onrender.com'
+  production: false,
+  apiUrl: "https://casa-torino-back-go.onrender.com",
 };
