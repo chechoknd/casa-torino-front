@@ -47,8 +47,12 @@ import { NavItem } from '../../../core/models/navigation.model';
           </nav>
 
           <div class="sidebar-footer" *ngIf="!sidebarCollapsed || mobileMenuOpen">
-            <strong>Soluciones Gastronómicas</strong>
-            <small>Operación centralizada de clientes, cocina, pedidos y pagos.</small>
+            <strong>{{ auth.user()?.full_name || auth.user()?.username }}</strong>
+            <small>{{ auth.user()?.email }}</small>
+            <button mat-button type="button" class="logout-button" aria-label="Cerrar sesión" (click)="logout()">
+              <mat-icon>logout</mat-icon>
+              <span>Salir</span>
+            </button>
           </div>
         </div>
       </aside>
@@ -73,42 +77,11 @@ import { NavItem } from '../../../core/models/navigation.model';
               <p>Administración de clientes, cocina, pedidos y pagos</p>
             </div>
           </div>
-          <div class="topbar-meta">
-            <span class="desktop-user-name">{{ auth.user()?.full_name || auth.user()?.username }}</span>
-            <small class="desktop-user-email">{{ auth.user()?.email }}</small>
-            <button mat-button type="button" class="logout-button" aria-label="Cerrar sesión" (click)="logout()">
-              <mat-icon>logout</mat-icon>
-              <span class="logout-text">Salir</span>
-            </button>
-            <button
-              type="button"
-              class="mobile-user-initial"
-              aria-label="Abrir opciones de usuario"
-              [attr.aria-expanded]="mobileUserMenuOpen"
-              (click)="toggleMobileUserMenu()"
-            >
-              {{ userInitial }}
-            </button>
-            <div class="mobile-user-menu page-card" *ngIf="mobileUserMenuOpen">
-              <button type="button" class="mobile-logout-option" (click)="logout()">
-                <mat-icon>logout</mat-icon>
-                Salir
-              </button>
-            </div>
-          </div>
         </header>
 
         <section class="workspace">
           <router-outlet />
         </section>
-
-        <footer class="footer page-card">
-          <div>
-            <strong>Casa Torino</strong>
-            <p>Soluciones gastronómicas para almuerzos, eventos, planes y catering.</p>
-          </div>
-          <small>Frontend operativo conectado con la API FastAPI.</small>
-        </footer>
       </main>
     </div>
   `,
@@ -291,55 +264,14 @@ import { NavItem } from '../../../core/models/navigation.model';
         line-height: 1.35;
       }
 
-      .topbar-meta {
-        display: grid;
-        gap: 0.15rem;
-        position: relative;
-        text-align: right;
-        justify-items: end;
-        align-self: flex-start;
-        padding-top: 0.1rem;
-      }
-
-      .topbar-meta span {
-        font-weight: 600;
-        line-height: 1.15;
-        color: #1E3A0F;
-      }
-
       .logout-button {
         margin-top: 0.15rem;
         color: #2D5016;
+        width: 100%;
+        justify-content: flex-start;
       }
       .logout-button:hover {
         background-color: #EDE8DA;
-      }
-
-      .mobile-user-initial {
-        display: none;
-      }
-
-      .mobile-user-menu {
-        display: none;
-      }
-
-      .footer {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 1rem;
-        flex-wrap: wrap;
-        padding: 1rem 1.25rem;
-        background-color: #EDE8DA;
-        color: #7A8C6E;
-      }
-      
-      .footer strong {
-        color: #1E3A0F;
-      }
-
-      .footer p {
-        margin: 0.3rem 0 0;
       }
 
       .workspace {
@@ -402,11 +334,6 @@ import { NavItem } from '../../../core/models/navigation.model';
           display: grid;
         }
 
-        .topbar-meta,
-        .footer {
-          text-align: left;
-        }
-
         .topbar {
           flex-wrap: nowrap;
           padding: 0.85rem;
@@ -425,76 +352,9 @@ import { NavItem } from '../../../core/models/navigation.model';
           height: 20px;
         }
 
-        .topbar-meta {
-          gap: 0.15rem;
-          justify-items: center;
-          min-width: 44px;
-          text-align: center;
-          padding-top: 0;
-        }
-
-        .desktop-user-name,
-        .desktop-user-email,
-        .logout-button {
-          display: none;
-        }
-
-        .mobile-user-initial {
-          display: inline-grid;
-          place-items: center;
-          width: 28px;
-          height: 28px;
-          color: #2D5016;
-          background: #D4E6C3;
-          border: 1px solid rgba(45, 80, 22, 0.16);
-          border-radius: 999px;
-          font-size: 0.82rem;
-          font-weight: 800;
-          line-height: 1;
-          cursor: pointer;
-        }
-
-        .mobile-user-menu {
-          display: block;
-          position: absolute;
-          top: calc(100% + 0.5rem);
-          right: 0;
-          z-index: 40;
-          min-width: 132px;
-          padding: 0.35rem;
-          text-align: left;
-          background: #FAF8F3;
-          border: 1px solid #C8BFA8;
-          border-radius: 12px;
-        }
-
-        .mobile-logout-option {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          width: 100%;
-          min-height: 40px;
-          padding: 0.55rem 0.75rem;
-          color: #2D5016;
-          background: transparent;
-          border: 0;
-          border-radius: 8px;
-          cursor: pointer;
-          font-weight: 700;
-        }
-
-        .mobile-logout-option:hover,
-        .mobile-logout-option:focus-visible {
-          background: #EDE8DA;
-        }
-
         .content {
           gap: 0.75rem;
           min-height: calc(100dvh - 1.5rem);
-        }
-
-        .footer {
-          padding: 0.85rem;
         }
       }
 
@@ -515,14 +375,8 @@ import { NavItem } from '../../../core/models/navigation.model';
           min-width: 0;
         }
 
-        .topbar-copy strong,
-        .desktop-user-name,
-        .desktop-user-email {
+        .topbar-copy strong {
           overflow-wrap: anywhere;
-        }
-
-        .footer {
-          display: none;
         }
       }
     `
@@ -534,7 +388,6 @@ export class ShellComponent {
   private readonly router = inject(Router);
   protected sidebarCollapsed = false;
   protected mobileMenuOpen = false;
-  protected mobileUserMenuOpen = false;
   protected readonly navItems: NavItem[] = [
     { label: 'Dashboard', route: '/dashboard', icon: 'dashboard' },
     { label: 'Clientes', route: '/customers', icon: 'groups' },
@@ -551,26 +404,14 @@ export class ShellComponent {
 
   protected openMobileMenu(): void {
     this.mobileMenuOpen = true;
-    this.mobileUserMenuOpen = false;
-  }
-
-  protected get userInitial(): string {
-    const user = this.auth.user();
-    const displayName = user?.full_name || user?.username || user?.email || 'U';
-    return displayName.trim().charAt(0).toUpperCase();
   }
 
   protected closeMobileMenu(): void {
     this.mobileMenuOpen = false;
   }
 
-  protected toggleMobileUserMenu(): void {
-    this.mobileUserMenuOpen = !this.mobileUserMenuOpen;
-  }
-
   protected logout(): void {
     this.closeMobileMenu();
-    this.mobileUserMenuOpen = false;
     this.auth.logout();
     this.router.navigate(['/login']);
   }
