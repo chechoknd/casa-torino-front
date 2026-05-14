@@ -7,14 +7,10 @@
 
 html {
   color-scheme: light;
-  @include mat.theme((
-    color: (
-      primary: mat.$green-palette,
-      tertiary: mat.$green-palette
-    ),
-    typography: 'DM Sans',
-    density: 0
-  ));
+  @include mat.theme((color: (primary: mat.$green-palette,
+        tertiary: mat.$green-palette ),
+      typography: 'DM Sans',
+      density: 0));
 }
 
 :root {
@@ -163,7 +159,7 @@ small,
 }
 
 .page-card {
-  background: linear-gradient(180deg, var(--color-surface-elevated), var(--color-surface-soft));
+  background: #EDE8DA;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
   overflow: clip;
@@ -224,7 +220,7 @@ small,
 }
 
 .mat-mdc-card {
-  background-color: transparent;
+  background-color: #EDE8DA !important;
 }
 
 .mat-mdc-dialog-surface {
@@ -987,7 +983,7 @@ ct-loading-spinner .spinner-backdrop {
     padding: 0;
   }
 
-  .page-header > div {
+  .page-header>div {
     min-width: 0;
   }
 
