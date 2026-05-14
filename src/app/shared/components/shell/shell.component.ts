@@ -121,6 +121,8 @@ import { NavItem } from '../../../core/models/navigation.model';
         gap: 1rem;
         padding: 1rem;
         align-items: stretch;
+        background-color: #EDE8DA;
+        color: #3B4A2F;
       }
 
       .shell.collapsed {
@@ -134,6 +136,7 @@ import { NavItem } from '../../../core/models/navigation.model';
         align-self: stretch;
         height: calc(100dvh - 2rem);
         z-index: 20;
+        background-color: #EDE8DA;
       }
 
       .sidebar-inner {
@@ -146,6 +149,7 @@ import { NavItem } from '../../../core/models/navigation.model';
       .sidebar-toggle,
       .mobile-menu-button {
         flex: 0 0 auto;
+        color: #2D5016;
       }
 
       .mobile-menu-button {
@@ -165,10 +169,12 @@ import { NavItem } from '../../../core/models/navigation.model';
 
       .sidebar-footer strong {
         font-size: 0.95rem;
+        color: #1E3A0F;
       }
 
       .sidebar-footer small {
         line-height: 1.45;
+        color: #7A8C6E;
       }
 
       .brand {
@@ -187,11 +193,12 @@ import { NavItem } from '../../../core/models/navigation.model';
       .brand span {
         font-size: 1.4rem;
         font-weight: 700;
+        color: #1E3A0F;
       }
 
       .brand small,
       .topbar p {
-        color: var(--ct-muted);
+        color: #7A8C6E;
       }
 
       nav {
@@ -203,15 +210,26 @@ import { NavItem } from '../../../core/models/navigation.model';
         display: flex;
         align-items: center;
         gap: 0.75rem;
-        color: inherit;
+        color: #3B4A2F;
         text-decoration: none;
         padding: 0.85rem 1rem;
         border-radius: 14px;
+        transition: all 0.2s;
+      }
+
+      .nav-link mat-icon {
+        color: #2D5016;
       }
 
       .nav-link.active,
       .nav-link:hover {
-        background: rgba(214, 145, 57, 0.16);
+        background: #D4E6C3;
+        color: #1E3A0F;
+      }
+
+      .nav-link.active mat-icon,
+      .nav-link:hover mat-icon {
+        color: #1E3A0F;
       }
 
       .content {
@@ -232,6 +250,7 @@ import { NavItem } from '../../../core/models/navigation.model';
         overflow: visible;
         position: relative;
         z-index: 10;
+        background-color: #EDE8DA;
       }
 
       .topbar-leading {
@@ -285,10 +304,15 @@ import { NavItem } from '../../../core/models/navigation.model';
       .topbar-meta span {
         font-weight: 600;
         line-height: 1.15;
+        color: #1E3A0F;
       }
 
       .logout-button {
         margin-top: 0.15rem;
+        color: #2D5016;
+      }
+      .logout-button:hover {
+        background-color: #EDE8DA;
       }
 
       .mobile-user-initial {
@@ -306,6 +330,12 @@ import { NavItem } from '../../../core/models/navigation.model';
         gap: 1rem;
         flex-wrap: wrap;
         padding: 1rem 1.25rem;
+        background-color: #EDE8DA;
+        color: #7A8C6E;
+      }
+      
+      .footer strong {
+        color: #1E3A0F;
       }
 
       .footer p {
@@ -348,7 +378,7 @@ import { NavItem } from '../../../core/models/navigation.model';
           position: fixed;
           inset: 0;
           z-index: 15;
-          background: rgba(16, 29, 9, 0.46);
+          background: rgba(30, 58, 15, 0.46);
           backdrop-filter: blur(2px);
         }
 
@@ -414,8 +444,8 @@ import { NavItem } from '../../../core/models/navigation.model';
           place-items: center;
           width: 28px;
           height: 28px;
-          color: var(--color-primary);
-          background: var(--color-primary-muted);
+          color: #2D5016;
+          background: #D4E6C3;
           border: 1px solid rgba(45, 80, 22, 0.16);
           border-radius: 999px;
           font-size: 0.82rem;
@@ -433,6 +463,9 @@ import { NavItem } from '../../../core/models/navigation.model';
           min-width: 132px;
           padding: 0.35rem;
           text-align: left;
+          background: #FAF8F3;
+          border: 1px solid #C8BFA8;
+          border-radius: 12px;
         }
 
         .mobile-logout-option {
@@ -442,17 +475,17 @@ import { NavItem } from '../../../core/models/navigation.model';
           width: 100%;
           min-height: 40px;
           padding: 0.55rem 0.75rem;
-          color: var(--color-primary);
+          color: #2D5016;
           background: transparent;
           border: 0;
-          border-radius: var(--radius-sm);
+          border-radius: 8px;
           cursor: pointer;
           font-weight: 700;
         }
 
         .mobile-logout-option:hover,
         .mobile-logout-option:focus-visible {
-          background: rgba(45, 80, 22, 0.08);
+          background: #EDE8DA;
         }
 
         .content {
